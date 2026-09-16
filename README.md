@@ -1,4 +1,18 @@
-# swift-qwen3.8-rtx3090
+<p align="center">
+  <img src="branding/swift-qwen38-rtx3090.png" alt="swift-qwen3.8-rtx3090 — fast local inference for Swift-Qwen3.8 on a single RTX 3090" width="720">
+</p>
+
+<h1 align="center">swift-qwen3.8-rtx3090</h1>
+
+<p align="center">
+  <strong>Target-calibrated fast variants for Qwen3.8-family checkpoints on a single RTX 3090.</strong>
+</p>
+
+<p align="center">
+  <a href="#why">Why</a> · <a href="#whats-here">What's here</a> · <a href="#quick-start">Quick start</a> · <a href="#verification">Verification</a> · <a href="docs/benchmarks.md">Benchmarks</a> · <a href="#licensing">Licensing</a>
+</p>
+
+---
 
 Reproducibly turn a compatible Swift-Qwen3.8-27B W4A16 checkpoint into a
 [syv](https://github.com/syv-ai/qwen38-27b-rtx3090)-optimised single-GPU
