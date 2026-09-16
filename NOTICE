@@ -1,0 +1,23 @@
+This project includes code derived from the syv-ai/qwen38-27b-rtx3090
+project (https://github.com/syv-ai/qwen38-27b-rtx3090), Copyright syv-ai
+contributors, licensed under the Apache License, Version 2.0:
+
+  - swift_qwen_syv/quant_heads_multishard.py
+    derived from prepare/quant_heads_stream.py
+  - swift_qwen_syv/gptq_lm_head.py
+    derived from drafter/gptq_lm_head.py
+  - swift_qwen_syv/requant_mtp.py
+    derived from drafter/requant_mtp_gptq.py
+
+The pipeline in swift_qwen_syv/build_fast.sh drives upstream scripts
+(drafter/gen_data.py, drafter/capture.py, drafter/train_mtp.py,
+prepare/build_draft_vocab.py) unmodified; gptq_utils.py math is consumed
+from the upstream checkout at runtime.
+
+Everything else in this repository is Copyright 2026 Liam Woodleigh-Hardinge
+and contributors, licensed under the Apache License, Version 2.0 (see LICENSE).
+
+This project distributes no model weights. Checkpoints referenced by the
+documentation (ukisai/Swift-Qwen3.8-27b, TheUnderscore/Swift-Qwen3.8-27b-W4A16-AWQ)
+carry their own licence terms (Swift Open License v1.0, gated access) and
+must be obtained independently by users authorised under those terms.

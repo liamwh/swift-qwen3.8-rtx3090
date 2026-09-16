@@ -1,0 +1,20 @@
+[project]
+name = "swift-qwen38-rtx3090"
+version = "0.1.0"
+description = "Reproducibly turn a compatible Swift-Qwen3.8-27B W4A16 checkpoint into a syv-optimised single-GPU fast variant: target-calibrated draft vocabulary, GPTQ int4 lm_head/MTP, structural verification, and RTX 3090 serving benchmarks."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+# Deliberately no runtime dependencies: the pipeline scripts run inside the
+# pinned syv stack container (torch, safetensors, compressed_tensors, numpy
+# provided there); the verifier core and its selftest are stdlib-only.
+
+[project.urls]
+Upstream = "https://github.com/syv-ai/qwen38-27b-rtx3090"
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B"]

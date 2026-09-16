@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Build outputs and caches
+dist/
+build/
+.ruff_cache/
+
+# Never commit model artefacts (reproduce locally; licences are checkpoint-gated)
+*.safetensors
+*.safetensors.*
+*.bin
+*.pt
+*.npy
+*.gguf
+models/
+drafter/runs/
+drafter/data/gen.jsonl
+drafter/data/hidden.npy
+draft_vocab_ids.json
+vocab_report.json
+
+# Local experiment scratch
+results/local/
+*.log

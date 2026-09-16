@@ -1,0 +1,32 @@
+# Example: fail-closed serving gate with the structural verifier
+#
+# Pattern (drop-in for any unit that serves a prepared model dir):
+#   ExecStartPre  - offline structural verification of the model dir
+#   ExecStartPost - live verification (health, served model, one generation)
+#
+# The offline gate runs BEFORE the container starts, so a corrupted dir
+# fails the unit with zero containers created; Restart=on-failure re-runs
+# the whole path. Replace PATHS, PORTS and the launcher with your own.
+#
+# Install: ~/.config/systemd/user/llm-fast.service   then
+#   systemctl --user daemon-reload && systemctl --user start llm-fast
+
+[Unit]
+Description=LLM serving (fast variant, verified)
+# If you run mutually exclusive backends on one GPU, tie them together:
+# Conflicts=llm-base.service
+
+[Service]
+Type=exec
+# --- gate 1: structural verification (stdlib core, no GPU needed) ---
+ExecStartPre=/usr/bin/python3 /opt/swift-qwen3.8-rtx3090/verifier/verify_model.py \
+    /data/models/MyModel-W4A16-fast \
+    --ids-source /data/models/MyModel-W4A16-fast/draft_vocab_ids.json
+# --- gate 2: live verification once the server answers ---
+ExecStartPost=/opt/swift-qwen3.8-rtx3090/examples/systemd/verify_live.sh
+ExecStart=/usr/local/bin/llm-server --model /data/models/MyModel-W4A16-fast --port 8090
+Restart=on-failure
+RestartSec=15
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,32 @@
+# Example: NixOS user service wrapping the syv container image with the
+# verifier gates. Generic paths and placeholders — adapt to your host.
+# Deliberately minimal: the full pipeline does not need Nix; this only
+# shows the deployment pattern (pinned image + fail-closed gates) for
+# hosts that manage services declaratively.
+{ config, pkgs, ... }:
+
+let
+  # Pin the digest you verified against; do not float tags for a serving box.
+  image = "ghcr.io/syv-ai/qwen38-27b-rtx3090@sha256:REPLACE-WITH-VERIFIED-DIGEST";
+  modelDir = "/data/models/MyModel-W4A16-fast";
+  verifier = "/opt/swift-qwen3.8-rtx3090/verifier/verify_model.py";
+in
+{
+  systemd.user.services.llm-fast = {
+    Unit = {
+      Description = "LLM serving (fast variant, verified)";
+      After = [ "docker.service" ];
+    };
+    Service = {
+      Type = "exec";
+      ExecStartPre = "${pkgs.python3}/bin/python3 ${verifier} ${modelDir}";
+      ExecStart = "${pkgs.docker}/bin/docker run --rm --gpus all -p 127.0.0.1:8090:8090 "
+        + "-v ${modelDir}:/model:ro --env-file /run/secrets/llm-env ${image} "
+        + "--model /model --port 8090";
+      ExecStopPost = "${pkgs.bash}/bin/bash -c 'docker ps -q --filter name=llm-fast | xargs -r docker stop'";
+      Restart = "on-failure";
+      RestartSec = 15;
+    };
+    Install.WantedBy = [ "default.target" ];
+  };
+}

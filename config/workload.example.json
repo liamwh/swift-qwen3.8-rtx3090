@@ -1,0 +1,21 @@
+{
+  "$comment": [
+    "Workload mix for make_corpus.py. 'weight' is the fraction of generated prompts",
+    "per category (must sum to 1.0); 'think' is the probability the prompt is marked",
+    "for thinking-on generation. These defaults approximate a single-user coding-agent",
+    "workload on a Rust/TypeScript codebase. They are NOT universal: the draft vocabulary",
+    "and GPTQ calibration are only as good as the representativeness of this corpus.",
+    "Edit the weights to match the output distribution you actually serve, then rerun",
+    "make_corpus.py -> gen_data.py -> vocab_build.py."
+  ],
+  "categories": [
+    { "category": "rust",   "weight": 0.35, "think": 0.60 },
+    { "category": "ts",     "weight": 0.15, "think": 0.60 },
+    { "category": "debug",  "weight": 0.12, "think": 0.70 },
+    { "category": "edit",   "weight": 0.10, "think": 0.50 },
+    { "category": "agent",  "weight": 0.08, "think": 0.70 },
+    { "category": "arch",   "weight": 0.10, "think": 0.55 },
+    { "category": "reason", "weight": 0.07, "think": 0.65 },
+    { "category": "general","weight": 0.03, "think": 0.40 }
+  ]
+}
