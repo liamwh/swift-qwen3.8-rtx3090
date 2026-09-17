@@ -25,6 +25,13 @@ A focused companion project, not a fork: it drives the syv stack's own
 speculative artefacts from the *target* model's own outputs instead of
 reusing base-Qwen's.
 
+**A ready-to-serve build of the Swift fast variant this pipeline produces
+is published:
+[liamwh/Swift-Qwen3.8-27B-W4A16-syv-fast](https://huggingface.co/liamwh/Swift-Qwen3.8-27B-W4A16-syv-fast)**
+(serves unprepared on the syv stack; carries both licences the Swift Open
+License requires of derivatives). This repo remains the way to rebuild it
+— or to build one for a different checkpoint.
+
 ## Why
 
 The syv stack serves Qwen3.8-27B on a single RTX 3090 in three tiers:
@@ -181,8 +188,8 @@ library; `examples/` shows the serving-gate pattern instead.
   around upstream scripts, not a change to them.
 - `quant_heads_multishard.py` generalises upstream's
   `prepare/quant_heads_stream.py` to checkpoints whose heads live in
-  different shards; it lives here until/unless the generalisation lands
-  upstream.
+  different shards. The generalisation has since landed upstream, so this
+  copy now only matters for serving pins older than that change.
 
 ## Licensing
 
@@ -190,14 +197,17 @@ library; `examples/` shows the serving-gate pattern instead.
   model weights, no checkpoint-derived tensors, and no generated outputs —
   only tooling, configs, docs and benchmark summaries.
 - **Swift-Qwen3.8-27B** (ukisai) and its quantisations (e.g.
-  TheUnderscore's W4A16 AWQ) are **gated** under the Swift Open License
-  v1.0: free for personal/research/evaluation use and for organisations
-  under US$1M annual recurring revenue; above that, commercial use needs a
-  separate Swift Enterprise License. The pipeline here therefore never
-  redistributes derived artefacts (int4 heads, MTP weights, draft-vocab id
-  lists, fast-variant shards) — you build them locally from a checkpoint
-  you are authorised to use. Regeneration is exactly what this repo makes
-  reproducible.
+  TheUnderscore's W4A16 AWQ, which is public) are under the Swift Open
+  License v1.0: free for personal/research use and for organisations under
+  US$1M annual revenue; above that, commercial use needs a separate Swift
+  Enterprise License. The licence grants redistribution of derivative
+  works (its sections 2 and 4) provided you carry the licence, mark
+  changes, keep attribution, and include the Apache-2.0 base-model
+  licence. The published
+  [fast-variant build](https://huggingface.co/liamwh/Swift-Qwen3.8-27B-W4A16-syv-fast)
+  meets exactly those conditions. This repo itself still ships no weights
+  — it is the recipe, and building from a checkpoint you are authorised to
+  use is what it makes reproducible.
 - Not legal advice; read the checkpoint card before use.
 
 ## Known limitations
