@@ -32,6 +32,8 @@ is published:
 License requires of derivatives). This repo remains the way to rebuild it
 — or to build one for a different checkpoint.
 
+![Decode throughput and speculative acceptance across the five compared variants](docs/charts/bench-ladder.svg)
+
 ## Why
 
 The syv stack serves Qwen3.8-27B on a single RTX 3090 in three tiers:

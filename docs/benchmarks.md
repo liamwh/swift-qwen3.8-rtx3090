@@ -23,6 +23,8 @@ Variants compared:
 
 ## Fast-variant ladder (`fast-ladder.jsonl`)
 
+![Decode throughput and speculative acceptance](charts/bench-ladder.svg)
+
 All five legs run the same night, REPS=4, medians:
 
 | leg | model / profile | ctx | decode tok/s | acceptance | tok/step | quote tok/s | VRAM MiB |
@@ -70,6 +72,8 @@ ladder. The B-leg numbers are the ones the fast-variant conclusion rests on.)
 
 ## Draft-vocab coverage (the mechanism)
 
+![Held-out draft-vocabulary coverage](charts/vocab-coverage.svg)
+
 Counted over Swift's own outputs (3,072 sequences, 3.8M train tokens,
 308 held-out sequences / 417k held-out tokens):
 
@@ -88,6 +92,8 @@ GPTQ calibration quality (lm_head KL to bf16, held-out states):
 RTN int4 0.00707 → GPTQ int4 **0.00234** (base-Qwen fast variant shipped at
 0.0029 on base-Qwen states). MTP relative errors 0.146–0.176, within
 upstream's shipped range.
+
+![lm_head quantisation quality, RTN vs GPTQ](charts/gptq-kl.svg)
 
 ## Quality battery (9 tasks, thinking on, 8192 budget)
 

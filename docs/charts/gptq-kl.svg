@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="360" viewBox="0 0 880 360" role="img">
+<rect width="880" height="360" rx="10" fill="#ffffff"/>
+<text x="24" y="34" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="17" fill="#1f2937" text-anchor="start" font-weight="600">lm_head quantisation quality</text>
+<text x="24" y="52" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#6b7280" text-anchor="start" font-weight="400">KL divergence to the bf16 head on held-out states, lower is better</text>
+<line x1="60.0" y1="58.0" x2="60.0" y2="314.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="60.0" y="332" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle" font-weight="400">0.000</text>
+<line x1="227.5" y1="58.0" x2="227.5" y2="314.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="227.5" y="332" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle" font-weight="400">0.002</text>
+<line x1="395.0" y1="58.0" x2="395.0" y2="314.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="395.0" y="332" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle" font-weight="400">0.004</text>
+<line x1="562.5" y1="58.0" x2="562.5" y2="314.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="562.5" y="332" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle" font-weight="400">0.006</text>
+<line x1="730.0" y1="58.0" x2="730.0" y2="314.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="730.0" y="332" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle" font-weight="400">0.008</text>
+<text x="395.0" y="350" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle" font-weight="400">KL(bf16 head || int4 head)</text>
+<line x1="302.9" y1="58.0" x2="302.9" y2="314.0" stroke="#374151" stroke-width="1.5" stroke-dasharray="5 4"/>
+<text x="308.875" y="70" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#6b7280" text-anchor="start" font-weight="400">upstream's shipped fast variant  0.0029</text>
+<rect x="60.0" y="98.0" width="592.1" height="40.0" rx="3" fill="#9ca3af"/>
+<text x="60" y="90" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2937" text-anchor="start" font-weight="400">round-to-nearest int4</text>
+<text x="662.1125000000001" y="123.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2937" text-anchor="start" font-weight="600">0.00707</text>
+<rect x="60.0" y="184.0" width="196.0" height="40.0" rx="3" fill="#2563eb"/>
+<text x="60" y="176" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2937" text-anchor="start" font-weight="400">GPTQ, Swift's own Hessian</text>
+<text x="265.975" y="209.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2937" text-anchor="start" font-weight="600">0.00234</text>
+</svg>
