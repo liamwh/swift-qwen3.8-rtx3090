@@ -147,8 +147,13 @@ def main():
     print("== quantization_config groups")
     qc = c.get("quantization_config", {})
     fmt = qc.get("format") or qc.get("quant_method")
+    # "compressed-tensors" is the quant_method real exports advertise on the
+    # Hub; the on-disk config.json the pipeline actually touches carries the
+    # compressor's own format names ("pack-quantized" for every W4A16 AWQ /
+    # int-heads dir here). Both spell the same compressed-tensors family.
     if fmt:
-        (ok if fmt == "compressed-tensors" else fail)(f"quant format {fmt}")
+        (ok if fmt in ("compressed-tensors", "pack-quantized")
+         else fail)(f"quant format {fmt}")
     else:
         warn("quantization_config carries no format/quant_method")
     groups = qc.get("config_groups", {})
