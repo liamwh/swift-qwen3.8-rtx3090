@@ -108,18 +108,36 @@ g3["weights"]["num_bits"] = BITS
 g1 = qc["config_groups"]["group_1"]
 assert g1["weights"]["num_bits"] == BITS, "src dir must already have the int4 lm_head"
 json.dump(c, open(D + "config.json", "w"), indent=2)
-# model-nonquant is hardlinked from the int8 model and may still carry its
-# STALE int8 mtp.* packed tensors; vLLM reads every key in an opened shard,
-# so the int8 mtp.fc would collide with the int4 one in extras ("have/got"
-# shape assert). Rewrite it norms-only (own inode).
-_stale = D + "model-nonquant.safetensors"
-if os.path.exists(_stale):
-    with safe_open(_stale, "pt") as _f:
-        _meta = _f.metadata()
-        _keep = {k: _f.get_tensor(k) for k in _f.keys()
-                 if not any(k.endswith(s) for s in (".weight_packed", ".weight_scale", ".weight_shape"))}
-    os.remove(_stale)
-    save_file(_keep, _stale, metadata=_meta or {"format": "pt"})
-    print(f"model-nonquant rewritten norms-only ({len(_keep)} tensors)")
+# A hardlinked shard inherited from the int8 model may still carry its STALE
+# int8 mtp.* packed tensors; vLLM reads every key in an opened shard, so the
+# int8 mtp.fc would collide with the int4 one in extras ("have/got" shape
+# assert). The shard's name is layout-dependent (model-nonquant.safetensors
+# for some exporters, model-mtp-bf16.safetensors for others), so scan every
+# shard and drop any packed/scale/shape tensor the final index does not map
+# there (after the remap above, that is every stale mtp.* packed tensor;
+# legitimately mapped packed tensors such as the int4 lm_head's stay).
+for _f in sorted(os.listdir(D)):
+    if not _f.endswith(".safetensors") or _f == "model_extra_tensors.safetensors":
+        continue
+    _path = D + _f
+    if os.path.islink(_path):
+        continue
+    with safe_open(_path, "pt") as _fobj:
+        _meta = _fobj.metadata()
+        _keys = list(_fobj.keys())
+    _drop = [k for k in _keys
+             if k.endswith((".weight_packed", ".weight_scale", ".weight_shape"))
+             and wm.get(k) != _f]
+    if not _drop:
+        continue
+    _keep = {}
+    with safe_open(_path, "pt") as _fobj:
+        for k in _keys:
+            if k not in _drop:
+                _keep[k] = _fobj.get_tensor(k)
+    os.remove(_path)
+    save_file(_keep, _path, metadata=_meta or {"format": "pt"})
+    print(f"{_f} rewritten: dropped {len(_drop)} stale packed tensors "
+          f"({len(_keep)} kept)")
 
 print("done", D)
