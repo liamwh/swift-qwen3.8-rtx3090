@@ -33,6 +33,20 @@ model's own outputs, generated on a corpus that mirrors your real workload.
 Measured effect on our Swift run: held-out coverage 96.7% → 99.8%, quote
 workload acceptance → 0.998, +3pp MTP acceptance overall.
 
+**Rebuilt for Swift 1.5 (2026-10-01), same method, one new artefact.**
+Swift 1.5's official AWQ carries the MTP module as its own indexed shard
+(`model-mtp-bf16.safetensors`), so `requant_mtp.py` takes the bf16 MTP
+source via `--bf16-mtp` (wired through `build_fast.sh` as `BF16_MTP`) and
+its stale-tensor rewrite scans every shard instead of assuming the
+`model-nonquant.safetensors` filename. Everything else ran verbatim: the
+same seeded corpus (byte-identical prompts), the same 3,072-prompt subset,
+the same 90/10 split and specials handling. The empirical finding worth
+keeping: the Swift 1.0 list covers Swift 1.5's held-out output at 99.81%
+where a list rebuilt from 1.5's own outputs covers 99.79% — the
+post-training update moved the output distribution far less than the
+Qwen→Swift step did (base-Qwen's list still misses 3.5% of 1.5's tokens).
+Rebuild anyway: the rebuild is cheap and it is the only way to know.
+
 ## Pipeline
 
 ```mermaid

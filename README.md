@@ -25,14 +25,16 @@ A focused companion project, not a fork: it drives the syv stack's own
 speculative artefacts from the *target* model's own outputs instead of
 reusing base-Qwen's.
 
-**A ready-to-serve build of the Swift fast variant this pipeline produces
-is published:
+**Ready-to-serve builds of what this pipeline produces are published:
+[liamwh/Swift-1.5-Qwen3.8-27B-W4A16-syv-fast](https://huggingface.co/liamwh/Swift-1.5-Qwen3.8-27B-W4A16-syv-fast)**
+(Swift 1.5, current) and
 [liamwh/Swift-Qwen3.8-27B-W4A16-syv-fast](https://huggingface.co/liamwh/Swift-Qwen3.8-27B-W4A16-syv-fast)**
-(serves unprepared on the syv stack; carries both licences the Swift Open
-License requires of derivatives). This repo remains the way to rebuild it
-— or to build one for a different checkpoint.
+(Swift 1.0, unchanged since 2026-09). Both serve unprepared on the syv
+stack and carry the licences the Swift Open License requires of
+derivatives. This repo remains the way to rebuild either — or to build one
+for a different checkpoint.
 
-![Decode throughput and speculative acceptance across the five compared variants](docs/charts/bench-ladder.svg)
+![Swift 1.5 decode throughput and speculative acceptance, with same-night Swift 1.0 control](docs/charts/bench-ladder-swift15.svg)
 
 ## Why
 
@@ -56,17 +58,23 @@ with only 18,701 of 40,960 ids shared between the two lists. GPTQ
 calibration is the same story: Hessians from the target's own hidden
 states give an int4 lm_head at KL 0.00234 vs 0.00707 for round-to-nearest.
 
-Measured result (all legs same night, medians, one RTX 3090 — see
+Measured results (same-night legs, medians, one RTX 3090 — see
 [docs/benchmarks.md](docs/benchmarks.md)):
 
 | | decode tok/s | MTP acceptance | quote acceptance |
 |---|---|---|---|
-| Swift int8 (baseline) | 94.0 | 0.630 | 0.962 |
-| **Swift-fast (this pipeline)** | **98.4** | **0.660** | **0.998** |
-| Qwen fast (upstream, reference) | 98.2 | 0.634 | — |
+| Swift 1.5 int8 (baseline) | 85.7 | 0.631 | 0.962 |
+| **Swift 1.5 fast (this pipeline)** | **101.3** | **0.645** | 0.927 |
+| Swift 1.0 fast (same-night re-measure) | 104.4 | 0.668 | 0.997 |
+| Qwen fast (2026-09 reference) | 98.2 | 0.634 | — |
 
-Swift-fast reaches base-Qwen-fast parity on the daily profile with better
-acceptance, and the DFlash2 acceptance deficit vs Qwen disappears.
+On Swift 1.5 the fast variant is worth +18% decode over the same
+checkpoint's int8 layout and +94% over no speculative decoding. Swift 1.5
+itself is ~3% slower than 1.0 at this profile: UkisAI's official AWQ body
+is ~1.5 GiB heavier than the third-party body under the 1.0 build. The
+rebuild also answered the vocab question empirically: the 1.5-derived list
+and the 1.0 list cover each other's outputs at ~99.8%, so the 1.0→1.5
+post-training moved the output distribution far less than Qwen→Swift did.
 
 ## What's here
 
@@ -87,7 +95,8 @@ bench/
   swift_ab.py                  A/B harness: suite/prefix/long/quote/reason/agent
                                modes + acceptance via /metrics counters
   quality_ab.py                9-task quality battery (mechanical checks)
-  results/                     committed summary artefacts (the real numbers)
+  results/                     committed summaries: fast-ladder.jsonl = Swift 1.0,
+                               swift15-ladder.jsonl = Swift 1.5 (+ same-night 1.0 control)
 docs/                          methodology, benchmarks, troubleshooting
 examples/systemd, examples/nix fail-closed serving-gate patterns
 ```
@@ -101,36 +110,64 @@ examples/systemd, examples/nix fail-closed serving-gate patterns
   and `drafter/` tooling are the runtime for the GPU phases
 - ~90 GB free disk for the checkpoint, variant dirs and hidden-state
   capture (74 GB memmap, deleted after the build)
-- Independent access to a compatible W4A16 checkpoint (see
-  [Licensing](#licensing); Swift checkpoints are gated)
-- For the verifier selftest only: Python 3.10+ stdlib — nothing else
+- A compatible W4A16 checkpoint (UkisAI's official 1.5 AWQ is public; see
+  [Licensing](#licensing))
 
 ## Quick start
+
+The worked example is Swift 1.5 (the current target); the identical flow
+built the Swift 1.0 variant on TheUnderscore's AWQ.
 
 ```bash
 # 0. selftest the verifier (stdlib only, ~1 s)
 python3 verifier/test/selftest.py
 
-# 1. fetch the checkpoint into the syv checkout (gated; see Licensing)
-cd $SYV_REPO && python prepare/fetch_thirdparty.py TheUnderscore/Swift-Qwen3.8-27b-W4A16-AWQ
+# 1. fetch the official UkisAI W4A16 AWQ of Swift 1.5 into the syv checkout
+#    (public; the bf16 MTP module ships as its own indexed shard)
+cd $SYV_REPO && python prepare/fetch_thirdparty.py ukisai/Swift-1.5-Qwen3.8-27b-W4A16-AWQ \
+  && mv models/Swift-1.5-Qwen3.8-27b-W4A16-AWQ models/Swift-1.5-Qwen3.8-27B-W4A16-syv
 
-# 2. int8 heads (multi-shard aware) — the model now serves; keep as rollback
-python swift_qwen_syv/quant_heads_multishard.py $SYV_REPO/models/Swift-Qwen3.8-27B-W4A16
+# 2. int8 heads (multi-shard aware) + base draft head — serves; keep as rollback
+docker run --rm -v $SYV_REPO:/repo -v $PWD:/companion:ro -e HOME=/tmp \
+  --entrypoint bash ghcr.io/syv-ai/qwen38-27b-rtx3090:latest \
+  -c '/app/venv/bin/python /companion/swift_qwen_syv/quant_heads_multishard.py \
+        /repo/models/Swift-1.5-Qwen3.8-27B-W4A16-syv \
+      && cd /repo && /app/venv/bin/python prepare/build_draft_vocab.py \
+        models/Swift-1.5-Qwen3.8-27B-W4A16-syv --ids prepare/draft_vocab_ids.json'
 
 # 3. your workload corpus — EDIT THE MIX FIRST (config/workload.example.json)
-python swift_qwen_syv/make_corpus.py --config my-workload.json \
+python3 swift_qwen_syv/make_corpus.py --config my-workload.json \
     --out $SYV_REPO/drafter/data/prompts.jsonl
 
-# 4. generate outputs with the target (upstream, ~1.7 h GPU)
+# 4. generate outputs with the target (upstream gen_data.py, ~1.8 h GPU,
+#    stop on held-out-coverage plateau — ours levelled at 3,072 of 5,500)
 cd $SYV_REPO && venv/bin/python drafter/gen_data.py
 
-# 5-10. draft vocab -> capture -> Hessians -> int4 heads -> assemble -> verify
-SRC_MODEL=$SYV_REPO/models/Swift-Qwen3.8-27B-W4A16 \
-FAST_MODEL=$SYV_REPO/models/Swift-Qwen3.8-27B-W4A16-fast \
-bash swift_qwen_syv/build_fast.sh
+# 5. build your draft vocab (compare against the previous target's list if
+#    you have one — the overlap is the interesting number)
+docker run --rm -v $SYV_REPO:/repo -v $PWD:/companion:ro -e HOME=/tmp \
+  --entrypoint bash ghcr.io/syv-ai/qwen38-27b-rtx3090:latest \
+  -c '/app/venv/bin/python /companion/swift_qwen_syv/vocab_build.py \
+        --gen /repo/drafter/data/gen.jsonl \
+        --tokenizer /repo/models/Swift-1.5-Qwen3.8-27B-W4A16-syv \
+        --out-ids /repo/drafter/data/swift15_draft_vocab_ids.json \
+        --out-report /repo/drafter/data/swift15_vocab_report.json'
 
-# serve it through the syv launchers; verify any time:
-python3 verifier/verify_model.py $SYV_REPO/models/Swift-Qwen3.8-27B-W4A16-fast
+# 6-10. capture -> Hessians -> int4 heads -> assemble -> verify, orchestrated;
+#       BF16_MTP points at the exporter's own bf16 MTP shard backup
+SRC_MODEL=$SYV_REPO/models/Swift-1.5-Qwen3.8-27B-W4A16-syv \
+FAST_MODEL=$SYV_REPO/models/Swift-1.5-Qwen3.8-27B-W4A16-syv-fast \
+IDS=$SYV_REPO/drafter/data/swift15_draft_vocab_ids.json \
+BF16_MTP=$SYV_REPO/models/Swift-1.5-Qwen3.8-27B-W4A16-syv/model-mtp-bf16.safetensors.bak-orig \
+GPU_UTIL=0.85 bash swift_qwen_syv/build_fast.sh
+
+# serve it through the syv launchers; verify any time (in-container — the
+# build writes root-owned files):
+docker run --rm -v $SYV_REPO:/repo -v $PWD:/companion:ro -e HOME=/tmp \
+  --entrypoint bash ghcr.io/syv-ai/qwen38-27b-rtx3090:latest \
+  -c '/app/venv/bin/python /companion/verifier/verify_model.py \
+        /repo/models/Swift-1.5-Qwen3.8-27B-W4A16-syv-fast \
+        --ids-source /repo/drafter/data/swift15_draft_vocab_ids.json'
 ```
 
 Customise the workload mix before trusting any downstream artefact: the
@@ -198,18 +235,19 @@ library; `examples/` shows the serving-gate pattern instead.
 - **This repo's code**: Apache-2.0 (see LICENSE, NOTICE). It contains no
   model weights, no checkpoint-derived tensors, and no generated outputs —
   only tooling, configs, docs and benchmark summaries.
-- **Swift-Qwen3.8-27B** (ukisai) and its quantisations (e.g.
-  TheUnderscore's W4A16 AWQ, which is public) are under the Swift Open
-  License v1.0: free for personal/research use and for organisations under
-  US$1M annual revenue; above that, commercial use needs a separate Swift
-  Enterprise License. The licence grants redistribution of derivative
-  works (its sections 2 and 4) provided you carry the licence, mark
-  changes, keep attribution, and include the Apache-2.0 base-model
-  licence. The published
-  [fast-variant build](https://huggingface.co/liamwh/Swift-Qwen3.8-27B-W4A16-syv-fast)
-  meets exactly those conditions. This repo itself still ships no weights
-  — it is the recipe, and building from a checkpoint you are authorised to
-  use is what it makes reproducible.
+- **Swift** (ukisai; both 1.0 and 1.5) and its quantisations (UkisAI's
+  official 1.5 W4A16 AWQ, TheUnderscore's public 1.0 AWQ) are under the
+  Swift Open License v1.0: free for personal/research use and for
+  organisations under US$1M annual revenue; above that, commercial use
+  needs a separate Swift Enterprise License. The licence grants
+  redistribution of derivative works (its sections 2 and 4) provided you
+  carry the licence, mark changes, keep attribution, and include the
+  Apache-2.0 base-model licence. Both published
+  [fast-variant builds](https://huggingface.co/liamwh/Swift-1.5-Qwen3.8-27B-W4A16-syv-fast)
+  meet exactly those conditions (the 1.5 one also carries upstream's
+  NOTICE). This repo itself still ships no weights — it is the recipe, and
+  building from a checkpoint you are authorised to use is what it makes
+  reproducible.
 - Not legal advice; read the checkpoint card before use.
 
 ## Known limitations
@@ -231,7 +269,19 @@ library; `examples/` shows the serving-gate pattern instead.
 - [syv-ai/qwen38-27b-rtx3090](https://github.com/syv-ai/qwen38-27b-rtx3090)
   (Apache-2.0) — the serving stack, the drafter recipe, and the math this
   pipeline reuses. Three scripts here are derived from it (NOTICE).
+- [ukisai/Swift-1.5-Qwen3.8-27b](https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-27b)
+  and its official
+  [W4A16-AWQ export](https://huggingface.co/ukisai/Swift-1.5-Qwen3.8-27b-W4A16-AWQ)
+  — the current target (Swift Open License v1.0; the AWQ carries the
+  original Qwen3.8 MTP head bit-identical, which this pipeline relies on).
 - [ukisai/Swift-Qwen3.8-27b](https://huggingface.co/ukisai/Swift-Qwen3.8-27b)
   and
   [TheUnderscore/Swift-Qwen3.8-27b-W4A16-AWQ](https://huggingface.co/TheUnderscore/Swift-Qwen3.8-27b-W4A16-AWQ)
-  — the target checkpoint (gated, Swift Open License v1.0).
+  — the Swift 1.0 target (its quantised body, public, Swift Open License
+  v1.0).
+
+Swift 1.5 is not a different architecture: it is Swift 1.0 with expanded
+post-training (coding/long-horizon/agentic), same Qwen3.8-27B base, same
+tokenizer and chat template byte-for-byte, original MTP head retained.
+UkisAI's model-quality claims are theirs; the quantisation, calibration,
+drafter work and every number in this repo are ours.

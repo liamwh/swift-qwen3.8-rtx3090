@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="460" viewBox="0 0 880 460" role="img">
+<rect width="880" height="460" rx="10" fill="#ffffff"/>
+<text x="24" y="34" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="17" fill="#1f2937" text-anchor="start" font-weight="600">Swift 1.5: held-out draft-vocabulary coverage</text>
+<text x="24" y="52" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#6b7280" text-anchor="start" font-weight="400">the 1.0-derived list covers 1.5's output as well as a list rebuilt from it</text>
+<line x1="78.0" y1="369.8" x2="670.0" y2="369.8" stroke="#e5e7eb" stroke-width="1"/>
+<text x="68" y="373.77777777777777" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#6b7280" text-anchor="end" font-weight="400">96%</text>
+<line x1="78.0" y1="293.3" x2="670.0" y2="293.3" stroke="#e5e7eb" stroke-width="1"/>
+<text x="68" y="297.33333333333337" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#6b7280" text-anchor="end" font-weight="400">97%</text>
+<line x1="78.0" y1="216.9" x2="670.0" y2="216.9" stroke="#e5e7eb" stroke-width="1"/>
+<text x="68" y="220.88888888888889" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#6b7280" text-anchor="end" font-weight="400">98%</text>
+<line x1="78.0" y1="140.4" x2="670.0" y2="140.4" stroke="#e5e7eb" stroke-width="1"/>
+<text x="68" y="144.44444444444446" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#6b7280" text-anchor="end" font-weight="400">99%</text>
+<line x1="78.0" y1="64.0" x2="670.0" y2="64.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="68" y="68.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#6b7280" text-anchor="end" font-weight="400">100%</text>
+<text x="97.40983606557377" y="426" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle" font-weight="400">1M</text>
+<text x="291.5081967213115" y="426" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle" font-weight="400">2M</text>
+<text x="485.60655737704917" y="426" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle" font-weight="400">3M</text>
+<text x="374.0" y="448" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle" font-weight="400">tokens counted into the vocabulary (Swift 1.5 outputs)</text>
+<line x1="78.0" y1="330.8" x2="670.0" y2="330.8" stroke="#9ca3af" stroke-width="2" stroke-dasharray="6 5"/>
+<text x="682" y="334.7911111111118" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#6b7280" text-anchor="start" font-weight="400">base-Qwen 40k  96.51%</text>
+<path d="M 89.2 123.6 L 277.3 94.6 L 465.4 85.4 L 656.6 80.1" fill="none" stroke="#2563eb" stroke-width="2.5"/>
+<circle cx="89.2" cy="123.6" r="4" fill="#2563eb"/>
+<circle cx="277.3" cy="94.6" r="4" fill="#2563eb"/>
+<circle cx="465.4" cy="85.4" r="4" fill="#2563eb"/>
+<circle cx="656.6" cy="80.1" r="4" fill="#2563eb"/>
+<text x="682" y="84.05333333333286" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#2563eb" text-anchor="start" font-weight="600">Swift-1.5-derived  99.79%</text>
+<path d="M 87.0 127.4 L 272.4 96.1 L 456.9 84.6 L 643.0 78.5" fill="none" stroke="#7c3aed" stroke-width="2.5"/>
+<circle cx="87.0" cy="127.4" r="4" fill="#7c3aed"/>
+<circle cx="272.4" cy="96.1" r="4" fill="#7c3aed"/>
+<circle cx="456.9" cy="84.6" r="4" fill="#7c3aed"/>
+<circle cx="643.0" cy="78.5" r="4" fill="#7c3aed"/>
+<text x="682" y="82.52444444444427" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#7c3aed" text-anchor="start" font-weight="600">Swift-1.0-derived  99.81%</text>
+<text x="82" y="78" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#6b7280" text-anchor="start" font-weight="400">25,285 ids from 1.5's own outputs; 21,494 shared with the 1.0 list (Jaccard 0.724)</text>
+</svg>

@@ -60,6 +60,16 @@ BENCH = [
     ("Qwen fast (upstream)",    167.4, 0.387, 3.71, GREY,      "DFlash2 · 46k context"),
 ]
 
+# swift15-ladder.jsonl (2026-10-01, REPS=4 medians, same night, same pinned
+# image; B2 re-measures the published Swift 1.0 fast build as the control)
+BENCH15 = [
+    ("Swift-1.5 int8 heads",        85.7, 0.631, 2.89, LIGHT_BLUE, "MTP · 114k context"),
+    ("Swift-1.5 fast (this build)", 101.3, 0.645, 2.93, BLUE, "MTP · 114k context"),
+    ("Swift-1.0 fast (same night)", 104.4, 0.668, 3.00, "#7c3aed", "MTP · 114k context"),
+    ("Swift-1.5 fast, no spec",     52.3, None, 1.00, "#c084fc", "MTP · 114k context"),
+    ("Swift-1.5 fast (this build)", 163.9, 0.399, 3.79, BLUE, "DFlash2 · 46k context"),
+]
+
 def bench_chart():
     W, H = 880, 470
     L, R = 220, 190
@@ -137,6 +147,45 @@ def vocab_chart():
     parts.append("</svg>")
     open(os.path.join(OUT, "vocab-coverage.svg"), "w").write("\n".join(parts))
 
+CONV15 = [(957864, 0.9922), (1927032, 0.9960), (2895758, 0.9972), (3880799, 0.9979)]
+BASE15 = 0.9651  # base-Qwen 40k list against Swift 1.5's held-out output
+
+def vocab_chart_15():
+    W, H = 880, 460
+    L, R = 78, 210
+    T, B = 64, 52
+    plot_w, plot_h = W - L - R, H - T - B
+    ymin, ymax = 95.5, 100.0
+    xmin, xmax = 0.9e6, 3.95e6
+
+    def X(t): return L + plot_w * (t - xmin) / (xmax - xmin)
+    def Y(v): return T + plot_h * (1 - (v * 100 - ymin) / (ymax - ymin))
+
+    parts = [svg_open(W, H), card(W, H)]
+    parts.append(txt(24, 34, "Swift 1.5: held-out draft-vocabulary coverage", 17, INK, weight=600))
+    parts.append(txt(24, 52, "the 1.0-derived list covers 1.5's output as well as a list rebuilt from it", 12, MUTED))
+    for v in (0.96, 0.97, 0.98, 0.99, 1.00):
+        y = Y(v)
+        parts.append(line(L, y, W - R, y, GRID))
+        parts.append(txt(L - 10, y + 4, f"{v*100:.0f}%", 11, MUTED, "end"))
+    for t in (1e6, 2e6, 3e6):
+        x = X(t)
+        parts.append(txt(x, H - B + 18, f"{t/1e6:.0f}M", 11, MUTED, "middle"))
+    parts.append(txt(L + plot_w / 2, H - 12, "tokens counted into the vocabulary (Swift 1.5 outputs)", 11, MUTED, "middle"))
+    parts.append(line(L, Y(BASE15), W - R, Y(BASE15), GREY, 2, "6 5"))
+    parts.append(txt(W - R + 12, Y(BASE15) + 4, f"base-Qwen 40k  {BASE15*100:.2f}%", 12, "#6b7280"))
+    for series, col, name in ((CONV15, BLUE, "Swift-1.5-derived"),
+                              (CONV, "#7c3aed", "Swift-1.0-derived")):
+        pts = [(X(t), Y(v)) for t, v in series]
+        path = "M " + " L ".join(f"{x:.1f} {y:.1f}" for x, y in pts)
+        parts.append(f'<path d="{path}" fill="none" stroke="{col}" stroke-width="2.5"/>')
+        for x, y in pts:
+            parts.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="4" fill="{col}"/>')
+        parts.append(txt(W - R + 12, Y(series[-1][1]) + 4, f"{name}  {series[-1][1]*100:.2f}%", 12, col, weight=600))
+    parts.append(txt(L + 4, T + 14, "25,285 ids from 1.5's own outputs; 21,494 shared with the 1.0 list (Jaccard 0.724)", 11, MUTED))
+    parts.append("</svg>")
+    open(os.path.join(OUT, "vocab-coverage-swift15.svg"), "w").write("\n".join(parts))
+
 # ----------------------------------------------------------------- gptq ----
 # drafter/runs/gptq.log on this machine; the shipped-fast-variant figure is
 # upstream's own documented number for the base model.
@@ -173,7 +222,77 @@ def gptq_chart():
     parts.append("</svg>")
     open(os.path.join(OUT, "gptq-kl.svg"), "w").write("\n".join(parts))
 
+KL15 = [
+    ("round-to-nearest int4", 0.00618, GREY),
+    ("GPTQ, Swift 1.5's own Hessian", 0.00221, BLUE),
+    ("GPTQ, Swift 1.0's own Hessian", 0.00234, "#7c3aed"),
+]
+
+def gptq_chart_15():
+    W, H = 880, 420
+    L, R = 60, 150
+    T, B = 64, 46
+    plot_w = W - L - R
+    vmax = 0.008
+    bar_h = 34
+    parts = [svg_open(W, H), card(W, H)]
+    parts.append(txt(24, 34, "lm_head quantisation quality, Swift 1.5", 17, INK, weight=600))
+    parts.append(txt(24, 52, "KL divergence to the bf16 head on held-out states, lower is better", 12, MUTED))
+    for v in (0.000, 0.002, 0.004, 0.006, 0.008):
+        x = L + plot_w * v / vmax
+        parts.append(line(x, T - 6, x, H - B, GRID))
+        parts.append(txt(x, H - B + 18, f"{v:.3f}", 11, MUTED, "middle"))
+    parts.append(txt(L + plot_w / 2, H - 10, "KL(bf16 head || int4 head)", 11, MUTED, "middle"))
+    xs = L + plot_w * SHIPPED / vmax
+    parts.append(line(xs, T - 6, xs, H - B, "#374151", 1.5, "5 4"))
+    parts.append(txt(xs + 6, T + 6, f"upstream's shipped fast variant  {SHIPPED}", 11, MUTED))
+    for i, (label, v, col) in enumerate(KL15):
+        y = T + 30 + i * (bar_h + 42)
+        bw = plot_w * v / vmax
+        parts.append(rect(L, y, bw, bar_h, col))
+        parts.append(txt(L, y - 8, label, 13, INK))
+        parts.append(txt(L + bw + 10, y + bar_h / 2 + 5, f"{v:.5f}", 13, INK, "start", 600))
+    parts.append("</svg>")
+    open(os.path.join(OUT, "gptq-kl-swift15.svg"), "w").write("\n".join(parts))
+
+def bench_chart_15():
+    W, H = 880, 500
+    L, R = 220, 190
+    T, B = 64, 40
+    plot_w = W - L - R
+    vmax = 180.0
+    row_h = (H - T - B) / len(BENCH15)
+    bar_h = 26
+    parts = [svg_open(W, H), card(W, H)]
+    parts.append(txt(24, 34, "Swift 1.5: decode throughput and acceptance", 17, INK, weight=600))
+    parts.append(txt(24, 52, "RTX 3090, four repetitions, medians, one night (B2 = same-night 1.0 control)", 12, MUTED))
+    for gv in (0.0, 45.0, 90.0, 135.0, 180.0):
+        x = L + plot_w * gv / vmax
+        parts.append(line(x, T - 6, x, H - B, GRID))
+        parts.append(txt(x, H - B + 18, f"{gv:.0f}", 11, MUTED, "middle"))
+    parts.append(txt(L + plot_w / 2, H - 10, "decode tok/s", 11, MUTED, "middle"))
+    group_y = None
+    for i, (label, dec, acc, tps, col, group) in enumerate(BENCH15):
+        y = T + i * row_h + (row_h - bar_h) / 2
+        if group != group_y and group_y is not None:
+            gy = T + i * row_h
+            parts.append(line(L - 12, gy, W - 16, gy, GRID))
+        group_y = group
+        parts.append(txt(L - 12, y + bar_h / 2 + 4, label, 13, INK, "end"))
+        bw = plot_w * dec / vmax
+        parts.append(rect(L, y, bw, bar_h, col))
+        parts.append(txt(L + bw + 8, y + bar_h / 2 + 0.5, f"{dec:.1f}", 13, INK, "start", 600))
+        acc_s = f"acc {acc:.3f}" if acc is not None else "no spec"
+        parts.append(txt(L + bw + 46, y + bar_h / 2 + 0.5, acc_s, 12, MUTED))
+        parts.append(txt(L + bw + 112, y + bar_h / 2 + 0.5, f"{tps:.2f} tok/step", 12, MUTED))
+    parts.append(txt(W - 16, T - 14, BENCH15[0][5].upper(), 10, MUTED, "end", 600))
+    parts.append(txt(W - 16, T + 4 * row_h - 14, BENCH15[4][5].upper(), 10, MUTED, "end", 600))
+    parts.append("</svg>")
+    open(os.path.join(OUT, "bench-ladder-swift15.svg"), "w").write("\n".join(parts))
+
+
 if __name__ == "__main__":
     bench_chart(); vocab_chart(); gptq_chart()
+    bench_chart_15(); vocab_chart_15(); gptq_chart_15()
     for f in sorted(os.listdir(OUT)):
         print(os.path.join(OUT, f), os.path.getsize(os.path.join(OUT, f)), "bytes")
