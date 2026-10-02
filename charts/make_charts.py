@@ -174,14 +174,16 @@ def vocab_chart_15():
     parts.append(txt(L + plot_w / 2, H - 12, "tokens counted into the vocabulary (Swift 1.5 outputs)", 11, MUTED, "middle"))
     parts.append(line(L, Y(BASE15), W - R, Y(BASE15), GREY, 2, "6 5"))
     parts.append(txt(W - R + 12, Y(BASE15) + 4, f"base-Qwen 40k  {BASE15*100:.2f}%", 12, "#6b7280"))
-    for series, col, name in ((CONV15, BLUE, "Swift-1.5-derived"),
-                              (CONV, "#7c3aed", "Swift-1.0-derived")):
+    # the two curves end 0.02pp apart — nudge the right-hand labels to
+    # opposite sides of their endpoints so they cannot overlap
+    for series, col, name, dy in ((CONV15, BLUE, "Swift-1.5-derived", -6),
+                                  (CONV, "#7c3aed", "Swift-1.0-derived", 16)):
         pts = [(X(t), Y(v)) for t, v in series]
         path = "M " + " L ".join(f"{x:.1f} {y:.1f}" for x, y in pts)
         parts.append(f'<path d="{path}" fill="none" stroke="{col}" stroke-width="2.5"/>')
         for x, y in pts:
             parts.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="4" fill="{col}"/>')
-        parts.append(txt(W - R + 12, Y(series[-1][1]) + 4, f"{name}  {series[-1][1]*100:.2f}%", 12, col, weight=600))
+        parts.append(txt(W - R + 12, Y(series[-1][1]) + dy, f"{name}  {series[-1][1]*100:.2f}%", 12, col, weight=600))
     parts.append(txt(L + 4, T + 14, "25,285 ids from 1.5's own outputs; 21,494 shared with the 1.0 list (Jaccard 0.724)", 11, MUTED))
     parts.append("</svg>")
     open(os.path.join(OUT, "vocab-coverage-swift15.svg"), "w").write("\n".join(parts))

@@ -23,12 +23,12 @@
 <circle cx="277.3" cy="94.6" r="4" fill="#2563eb"/>
 <circle cx="465.4" cy="85.4" r="4" fill="#2563eb"/>
 <circle cx="656.6" cy="80.1" r="4" fill="#2563eb"/>
-<text x="682" y="84.05333333333286" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#2563eb" text-anchor="start" font-weight="600">Swift-1.5-derived  99.79%</text>
+<text x="682" y="74.05333333333286" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#2563eb" text-anchor="start" font-weight="600">Swift-1.5-derived  99.79%</text>
 <path d="M 87.0 127.4 L 272.4 96.1 L 456.9 84.6 L 643.0 78.5" fill="none" stroke="#7c3aed" stroke-width="2.5"/>
 <circle cx="87.0" cy="127.4" r="4" fill="#7c3aed"/>
 <circle cx="272.4" cy="96.1" r="4" fill="#7c3aed"/>
 <circle cx="456.9" cy="84.6" r="4" fill="#7c3aed"/>
 <circle cx="643.0" cy="78.5" r="4" fill="#7c3aed"/>
-<text x="682" y="82.52444444444427" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#7c3aed" text-anchor="start" font-weight="600">Swift-1.0-derived  99.81%</text>
+<text x="682" y="94.52444444444427" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#7c3aed" text-anchor="start" font-weight="600">Swift-1.0-derived  99.81%</text>
 <text x="82" y="78" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#6b7280" text-anchor="start" font-weight="400">25,285 ids from 1.5's own outputs; 21,494 shared with the 1.0 list (Jaccard 0.724)</text>
 </svg>
