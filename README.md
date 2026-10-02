@@ -27,14 +27,15 @@ reusing base-Qwen's.
 
 **Ready-to-serve builds of what this pipeline produces are published:
 [liamwh/Swift-1.5-Qwen3.8-27B-W4A16-syv-fast](https://huggingface.co/liamwh/Swift-1.5-Qwen3.8-27B-W4A16-syv-fast)**
-(Swift 1.5, current) and
+(Swift 1.5, current; `main` serves the 29,670-id union draft vocabulary, tag
+`vocab-1.5-only` is the earlier 25,285-id revision) and
 [liamwh/Swift-Qwen3.8-27B-W4A16-syv-fast](https://huggingface.co/liamwh/Swift-Qwen3.8-27B-W4A16-syv-fast)**
 (Swift 1.0, unchanged since 2026-09). Both serve unprepared on the syv
 stack and carry the licences the Swift Open License requires of
 derivatives. This repo remains the way to rebuild either — or to build one
 for a different checkpoint.
 
-![Swift 1.5 decode throughput and speculative acceptance, with same-night Swift 1.0 control](docs/charts/bench-ladder-swift15.svg)
+![Swift 1.0 and Swift 1.5 decode throughput on one RTX 3090, interleaved boots](docs/charts/bench-ladder-swift15.svg)
 
 ## Why
 
@@ -58,28 +59,30 @@ with only 18,701 of 40,960 ids shared between the two lists. GPTQ
 calibration is the same story: Hessians from the target's own hidden
 states give an int4 lm_head at KL 0.00234 vs 0.00707 for round-to-nearest.
 
-Measured results (same-night legs, medians, one RTX 3090 — see
-[docs/benchmarks.md](docs/benchmarks.md)):
+Measured results (25 interleaved container boots on one RTX 3090, pooled
+over boots, T=0.7, MTP long; see [docs/benchmarks.md](docs/benchmarks.md)):
 
-| | decode tok/s | MTP acceptance | quote acceptance |
-|---|---|---|---|
-| Swift 1.5 int8 (baseline) | 85.7 | 0.631 | 0.962 |
-| **Swift 1.5 fast (this pipeline)** | **101.3** | **0.645** | 0.927 |
-| Swift 1.0 fast (same-night re-measure) | 104.4 | 0.668 | 0.997 |
-| Qwen fast (2026-09 reference) | 98.2 | 0.634 | — |
+| | decode tok/s | MTP acceptance | tokens/step | verify steps/s |
+|---|---|---|---|---|
+| Swift 1.0 fast (8 boots) | 104.6 | 0.668 | 3.005 | 34.8 |
+| Swift 1.5 fast, 1.5 list (8 boots) | 103.6 | 0.657 | 2.971 | 34.9 |
+| Swift 1.5 fast, union list (2 boots) | 106.2 | 0.663 | 2.988 | 35.5 |
+| Swift 1.5 fast, 1.5 list (same 2-boot design) | 104.3 | 0.657 | 2.971 | 35.1 |
 
-On Swift 1.5 the fast variant is worth +18% decode over the same
-checkpoint's int8 layout and +94% over no speculative decoding (the int8
-leg ran first that night, so treat the 18% as an upper bound). Swift 1.5
-measured ~3% slower than the 1.0 fast build at this profile. About 78% of
-that gap is lower speculative yield (2.93 vs 3.00 tokens per step); step
-time differs by 0.7% (28.98 vs 28.78 ms). The two fast directories are the
-same size to within 2 MB, so weight bytes don't explain it. Leg order
-(1.5, then 1.0) and night-to-night drift are not controlled; see
-[docs/benchmarks.md](docs/benchmarks.md). The rebuild also tested the
-vocab question: the 1.5-derived list and the 1.0 list each cover ~99.8% of
-1.5's held-out output. That shows the tokens the drafter needs barely
-changed. It says nothing about the probabilities inside the list.
+With speculation off the two checkpoints decode at 52.3 tok/s each (-0.06%).
+With MTP on, Swift 1.5 is about 1% slower at T=0.7 (not distinguishable
+from zero prompt by prompt) and about 3.5% slower under greedy decoding.
+Nearly all of that is tokens per step; verify steps per second are equal
+within 1%. The same build moves 99 to 107 tok/s between boots. Swift 1.5's
+draft list is not the cause: swapping lists moves acceptance by about one
+point, swapping models by two to three. The union of the Swift 1.0 and 1.5
+lists was faster than the 1.5 list in all four paired boots (+1.8% at
+T=0.7, +1.3% at T=0) and lifts the quote-workload acceptance from 0.927 to
+0.998, because the 1.5 list lacks four ids (`logger`, `.getLogger`, `(__`,
+`__)`) that the synthetic quote document repeats 56 times each. The union
+is the recommended Swift 1.5 configuration. Coverage numbers (99.79% for
+the 1.5 list, 99.81% for the 1.0 list on 1.5's held-out output, Jaccard
+0.724) describe which tokens occur, not their probabilities.
 
 ## What's here
 
@@ -192,6 +195,18 @@ BASE=... THINKING=1 python3 bench/quality_ab.py out.json
 Acceptance is read from vLLM's `/metrics` spec-decode counters (accepted /
 drafted / drafts), so numbers are the server's own view, not a prompt-level
 approximation.
+
+`bench/analyze_runs.py` pools legs, decomposes decode rate into tokens per
+step times verify steps per second, and compares two groups prompt by
+prompt with a bootstrap. `bench/controlled_analysis.sh` regenerates
+`bench/results/controlled-summary.json` from the committed raw legs of the
+2026-10-02 session, and `charts/make_charts.py` draws the Swift 1.5 charts
+from that file. The legs were run by `bench/controlled_ladder.py`, which
+boots one configuration per leg in a given order (it is the author's
+script: it reads one sops secret and uses his checkout paths, so adapt the
+constants at the top). `swift_qwen_syv/build_vocab_variant.py` makes a fast
+directory that differs from another only in its draft vocabulary, and
+`bench/quote_vocab_audit.py` counts quote-document tokens outside each list.
 
 ## Verification
 

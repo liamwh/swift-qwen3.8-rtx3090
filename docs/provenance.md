@@ -46,12 +46,20 @@ both neutral values.
 | base Qwen (`prepare/draft_vocab_ids.json` in syv) | 40,960 | `b64b6dfc...` |
 | Swift 1.0 (`data/draft_vocab_ids/swift_draft_vocab_ids.json`) | 25,879 | `e30af795...` |
 | Swift 1.5 (`data/draft_vocab_ids/swift15_draft_vocab_ids.json`) | 25,285 | `af978365...` |
+| union of the two (`data/draft_vocab_ids/swift15_union_draft_vocab_ids.json`) | 29,670 | `06d479e1...` |
 
 The Swift 1.0 and 1.5 lists share 21,494 ids and have a union of 29,670
 (Jaccard 0.724). Each covers more than 99.7% of the same held-out Swift 1.5
 tokens, so the ids private to one list carry about 0.2% of held-out tokens
 at most. That is a statement about which tokens occur. It does not say the
 two models assign similar probabilities to them.
+
+The union list is the sorted union of the two Swift lists. Every draft-head
+row is the matching row of the serving model's own int4 `lm_head`. It is
+what `liamwh/Swift-1.5-Qwen3.8-27B-W4A16-syv-fast` serves on `main`
+(commit `3d93b240`). The earlier revision, which served the Swift 1.5 list,
+is the tag `vocab-1.5-only` (commit `e7067d6d`). Full hashes are in
+`data/draft_vocab_ids/SHA256SUMS`.
 
 ## Quote workload audit
 
