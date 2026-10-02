@@ -74,6 +74,28 @@ def summarise_group(name, labels, suite_dir, ladder):
         "pooled_decode_tps": pooled_rate(runs),
         "ttft_s_median": statistics.median(r["ttft_s"] for r in runs),
     }
+    out["per_leg"] = {}
+    for label in labels:
+        leg_runs = load_leg(suite_dir, label)
+        leg = {"pooled_decode_tps": pooled_rate(leg_runs), "median_decode_tps": statistics.median(r["decode_tps"] for r in leg_runs)}
+        c = ladder.get(label, {}).get("acceptance_suite")
+        if c:
+            leg["acceptance"] = c["accepted"] / c["drafted"]
+            leg["tokens_per_step"] = (c["accepted"] + c["steps"]) / c["steps"]
+            leg["steps_per_s"] = leg["pooled_decode_tps"] / leg["tokens_per_step"]
+        out["per_leg"][label] = leg
+        out["per_leg"][label]["quote"] = None
+        row = ladder.get(label, {})
+        if row.get("acceptance_quote"):
+            qc = row["acceptance_quote"]
+            out["per_leg"][label]["quote"] = {
+                "acceptance": qc["accepted"] / qc["drafted"],
+                "tokens_per_step": (qc["accepted"] + qc["steps"]) / qc["steps"],
+                "accepted": qc["accepted"], "drafted": qc["drafted"], "steps": qc["steps"],
+                "decode_tps": row.get("quote_decode"),
+                "char_match": row.get("quote_char_match"),
+                "exact": row.get("quote_exact"),
+            }
     counters = [ladder[l]["acceptance_suite"] for l in labels if ladder.get(l, {}).get("acceptance_suite")]
     if counters:
         accepted = sum(c["accepted"] for c in counters)
