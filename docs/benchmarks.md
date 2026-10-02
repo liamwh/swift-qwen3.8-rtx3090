@@ -84,25 +84,40 @@ Reading it:
 
 - **The fast variant is worth more on 1.5 than it was on 1.0**: +18% over
   the same checkpoint's int8 layout (85.7 → 101.3) and +94% over no-spec
-  decoding, at 1.1 GiB less VRAM than the int8 layout.
-- **Swift 1.5 is ~3% slower than Swift 1.0 at the daily profile**
-  (101.3 vs 104.4 same-night), and the gap is speculative yield, not
-  weight bytes. Steps per second match to 0.7% (34.5 vs 34.7; the quote
-  legs to 0.4%), so per-step time is equal — if the body read more bytes
-  per step, the step rate would fall with it. What fell is tokens per
-  step: 3.00 → 2.93 (acceptance 0.668 → 0.645). The MTP drafter is
-  bit-identical base-Qwen in both builds, so the target moved away from
-  it. An earlier reading blamed the ~1.5 GiB bigger official AWQ export;
-  the step-rate arithmetic rules that out (the extra bytes are the
-  separate bf16 MTP shard and layout, not per-step decode reads), and the
-  85.7-vs-94.0 int8 comparison it leaned on is cross-night, single-boot,
-  and uncontrolled.
-- The 1.0 build's 0.998 quote-workload acceptance did not carry over
-  (0.927 with the 1.5 vocab, 0.962 with base-Qwen's; reproduction
-  fidelity unchanged). The vocabulary rebuild measured the two output
-  distributions as near interchangeable on coverage, but the
-  verbatim-reproduction drafting edge was a 1.0 property, not a
-  vocabulary property.
+  decoding. Treat the 18% as a ceiling. The F leg ran first that night
+  and landed 9% under the 94.0 measured for the 1.0 int8 build on an
+  earlier night, although the two int8 directories differ in safetensors
+  size by about 1 KB. The VRAM column is peak on a card that also runs a
+  desktop, which moves by ~1 GiB on its own, so its differences are noise.
+- **Swift 1.5 measured ~3% slower than Swift 1.0 at the daily profile**
+  (101.3 vs 104.4 same-night). About three quarters of that is
+  speculative yield, not weight bytes. Steps per second differ by 0.7%
+  (34.5 vs 34.7, from decode rate / tok-per-step), so per-step time is
+  equal. Tokens per step fell 3.00 → 2.93 (acceptance 0.668 → 0.645).
+  The two fast directories differ by 1.6 MB of safetensors, so there is
+  no heavier body to blame. The 1.5 build also uses a different draft
+  list, so the acceptance drop mixes a model effect with a vocabulary
+  effect. Not separated.
+- **The 3% is soft.** Leg order was F, G, B2, so warm-up over the night
+  favours 1.0. The same 1.0 build measured 98.4 on its first night and
+  104.4 here (+6%). Per prompt, 1.5 was slower on 5 of 6 prompts and
+  level on the sixth, 2.5% behind on average (bootstrap 95% interval
+  0.6 to 4.1 points; holds the night fixed, not the order). Per-request
+  IQRs overlap heavily (G 90–128, B2 94–129) because prompts differ in
+  speed far more than builds do. Untested: alternate 1.0/1.5 as
+  B2 → G → G → B2 in one session, and a same-night 1.0 no-spec leg
+  (1.5 no-spec is 52.3 tok/s; a match would put the whole gap in
+  acceptance).
+- **The 1.0 build's 0.998 quote-workload acceptance did not carry over**
+  (0.927 with the 1.5 vocab, 0.962 with base-Qwen's), and the cause is the
+  draft list, not the model. Every leg reproduces the document exactly,
+  and Swift 1.0 int8, Qwen fast and Swift 1.5 int8 log identical counts
+  (18,873 drafted, 18,162 accepted, 6,291 steps) behind base Qwen's list.
+  Tokenising the 8,151-token document: base Qwen's list misses 232 tokens,
+  the 1.5 list 236, the 1.0 list 10. The 1.5 list lacks four ids that
+  each appear 56 times (`logger`, `.getLogger`, `(__`, `__)`); the 1.0
+  list has them. The edge was a 1.0 list coincidence on a synthetic
+  Python document, not a post-training effect.
 - DFlash2 acceptance on 1.5 (0.399) is the best measured on this card,
   ahead of every 1.0/Qwen leg; 163.9 tok/s decode at 46k ctx.
 

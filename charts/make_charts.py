@@ -61,13 +61,17 @@ BENCH = [
 ]
 
 # swift15-ladder.jsonl (2026-10-01, REPS=4 medians, same night, same pinned
-# image; B2 re-measures the published Swift 1.0 fast build as the control)
+# image; B2 re-measures the published Swift 1.0 fast build as the control).
+# q1/q3 are the interquartile range over the 24 per-request decode rates in
+# each leg's *-suite.json (6 prompts x 4 reps). Prompts differ in speed far
+# more than builds do, so the IQR is wide; compare builds prompt by prompt.
 BENCH15 = [
-    ("Swift-1.5 int8 heads",        85.7, 0.631, 2.89, LIGHT_BLUE, "MTP · 114k context"),
-    ("Swift-1.5 fast (this build)", 101.3, 0.645, 2.93, BLUE, "MTP · 114k context"),
-    ("Swift-1.0 fast (same night)", 104.4, 0.668, 3.00, "#7c3aed", "MTP · 114k context"),
-    ("Swift-1.5 fast, no spec",     52.3, None, 1.00, "#c084fc", "MTP · 114k context"),
-    ("Swift-1.5 fast (this build)", 163.9, 0.399, 3.79, BLUE, "DFlash2 · 46k context"),
+    # (label, decode tok/s, acceptance, tok/step, colour, group, q1, q3)
+    ("Swift-1.5 int8 heads",        85.7, 0.631, 2.89, LIGHT_BLUE, "MTP · 114k context", 79.5, 104.9),
+    ("Swift-1.5 fast (this build)", 101.3, 0.645, 2.93, BLUE, "MTP · 114k context", 90.3, 127.9),
+    ("Swift-1.0 fast (same night)", 104.4, 0.668, 3.00, "#7c3aed", "MTP · 114k context", 94.2, 128.8),
+    ("Swift-1.5 fast, no spec",     52.3, None, 1.00, "#c084fc", "MTP · 114k context", 52.3, 52.4),
+    ("Swift-1.5 fast (this build)", 163.9, 0.399, 3.79, BLUE, "DFlash2 · 46k context", 119.7, 222.3),
 ]
 
 def bench_chart():
@@ -262,19 +266,19 @@ def bench_chart_15():
     L, R = 220, 190
     T, B = 64, 40
     plot_w = W - L - R
-    vmax = 180.0
+    vmax = 240.0
     row_h = (H - T - B) / len(BENCH15)
     bar_h = 26
     parts = [svg_open(W, H), card(W, H)]
     parts.append(txt(24, 34, "Swift 1.5: decode throughput and acceptance", 17, INK, weight=600))
-    parts.append(txt(24, 52, "RTX 3090, four repetitions, medians, one night (B2 = same-night 1.0 control)", 12, MUTED))
-    for gv in (0.0, 45.0, 90.0, 135.0, 180.0):
+    parts.append(txt(24, 52, "RTX 3090, four repetitions, medians, one night. Whiskers: interquartile range over 24 requests.", 12, MUTED))
+    for gv in (0.0, 60.0, 120.0, 180.0, 240.0):
         x = L + plot_w * gv / vmax
         parts.append(line(x, T - 6, x, H - B, GRID))
         parts.append(txt(x, H - B + 18, f"{gv:.0f}", 11, MUTED, "middle"))
     parts.append(txt(L + plot_w / 2, H - 10, "decode tok/s", 11, MUTED, "middle"))
     group_y = None
-    for i, (label, dec, acc, tps, col, group) in enumerate(BENCH15):
+    for i, (label, dec, acc, tps, col, group, q1, q3) in enumerate(BENCH15):
         y = T + i * row_h + (row_h - bar_h) / 2
         if group != group_y and group_y is not None:
             gy = T + i * row_h
@@ -283,6 +287,11 @@ def bench_chart_15():
         parts.append(txt(L - 12, y + bar_h / 2 + 4, label, 13, INK, "end"))
         bw = plot_w * dec / vmax
         parts.append(rect(L, y, bw, bar_h, col))
+        wy = y + bar_h + 9
+        x1, x3 = L + plot_w * q1 / vmax, L + plot_w * q3 / vmax
+        parts.append(line(x1, wy, x3, wy, INK, 1.5))
+        parts.append(line(x1, wy - 4, x1, wy + 4, INK, 1.5))
+        parts.append(line(x3, wy - 4, x3, wy + 4, INK, 1.5))
         parts.append(txt(L + bw + 8, y + bar_h / 2 + 0.5, f"{dec:.1f}", 13, INK, "start", 600))
         acc_s = f"acc {acc:.3f}" if acc is not None else "no spec"
         parts.append(txt(L + bw + 46, y + bar_h / 2 + 0.5, acc_s, 12, MUTED))

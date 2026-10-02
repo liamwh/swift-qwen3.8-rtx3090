@@ -69,12 +69,17 @@ Measured results (same-night legs, medians, one RTX 3090 — see
 | Qwen fast (2026-09 reference) | 98.2 | 0.634 | — |
 
 On Swift 1.5 the fast variant is worth +18% decode over the same
-checkpoint's int8 layout and +94% over no speculative decoding. Swift 1.5
-itself is ~3% slower than 1.0 at this profile: UkisAI's official AWQ body
-is ~1.5 GiB heavier than the third-party body under the 1.0 build. The
-rebuild also answered the vocab question empirically: the 1.5-derived list
-and the 1.0 list cover each other's outputs at ~99.8%, so the 1.0→1.5
-post-training moved the output distribution far less than Qwen→Swift did.
+checkpoint's int8 layout and +94% over no speculative decoding (the int8
+leg ran first that night, so treat the 18% as an upper bound). Swift 1.5
+measured ~3% slower than the 1.0 fast build at this profile. About 78% of
+that gap is lower speculative yield (2.93 vs 3.00 tokens per step); step
+time differs by 0.7% (28.98 vs 28.78 ms). The two fast directories are the
+same size to within 2 MB, so weight bytes don't explain it. Leg order
+(1.5, then 1.0) and night-to-night drift are not controlled; see
+[docs/benchmarks.md](docs/benchmarks.md). The rebuild also tested the
+vocab question: the 1.5-derived list and the 1.0 list each cover ~99.8% of
+1.5's held-out output. That shows the tokens the drafter needs barely
+changed. It says nothing about the probabilities inside the list.
 
 ## What's here
 
