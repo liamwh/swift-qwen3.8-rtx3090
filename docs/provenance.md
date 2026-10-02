@@ -57,8 +57,9 @@ two models assign similar probabilities to them.
 The union list is the sorted union of the two Swift lists. Every draft-head
 row is the matching row of the serving model's own int4 `lm_head`. It is
 what `liamwh/Swift-1.5-Qwen3.8-27B-W4A16-syv-fast` serves on `main`
-(commit `3d93b240`). The earlier revision, which served the Swift 1.5 list,
-is the tag `vocab-1.5-only` (commit `e7067d6d`). Full hashes are in
+(since commit `3d93b240`; later commits touch only the card). The earlier
+revision, which served the Swift 1.5 list, is the tag `vocab-1.5-only`
+(commit `e7067d6d`). Full hashes are in
 `data/draft_vocab_ids/SHA256SUMS`.
 
 ## Quote workload audit
