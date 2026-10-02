@@ -291,4 +291,4 @@ tokenizer and chat template byte-for-byte, original MTP head retained.
 UkisAI's model-quality claims are theirs; the quantisation, calibration,
 drafter work and every number in this repo are ours. The narrative
 write-up lives on
-[veloxide.dev/projects/swift-qwen3-8-rtx3090](https://www.liamwh.com/projects/swift-qwen3-8-rtx3090).
+[veloxide.dev/projects/swift-qwen3-8-rtx3090](https://veloxide.dev/projects/swift-qwen3-8-rtx3090).

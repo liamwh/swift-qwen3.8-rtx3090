@@ -42,10 +42,15 @@ its stale-tensor rewrite scans every shard instead of assuming the
 same seeded corpus (byte-identical prompts), the same 3,072-prompt subset,
 the same 90/10 split and specials handling. The empirical finding worth
 keeping: the Swift 1.0 list covers Swift 1.5's held-out output at 99.81%
-where a list rebuilt from 1.5's own outputs covers 99.79% — the
-post-training update moved the output distribution far less than the
-Qwen→Swift step did (base-Qwen's list still misses 3.5% of 1.5's tokens).
-Rebuild anyway: the rebuild is cheap and it is the only way to know.
+where a list rebuilt from 1.5's own outputs covers 99.79%. The set of
+tokens worth drafting moved far less from 1.0 to 1.5 than it did from
+Qwen to Swift (base-Qwen's list still misses 3.5% of 1.5's tokens). That
+is a coverage result. It says nothing about the token probabilities.
+Coverage also hides repeated misses. On the quote workload the 1.5 list
+misses 2.9% of tokens against 0.12% for the 1.0 list, and those misses
+are four ids repeated 56 times each. Rebuild anyway: the rebuild is cheap
+and a coverage number is worth having. Do not assume the rebuilt list is
+the best one.
 
 ## Pipeline
 

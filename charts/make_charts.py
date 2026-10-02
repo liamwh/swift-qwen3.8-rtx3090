@@ -147,7 +147,7 @@ def vocab_chart():
         parts.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="4" fill="{BLUE}"/>')
     parts.append(txt(W - R + 12, Y(CONV[-1][1]) + 4, f"Swift-derived  {CONV[-1][1]*100:.2f}%", 12, BLUE, weight=600))
     parts.append(txt(X(CONV[0][0]) - 6, Y(CONV[0][1]) - 10, f"{CONV[0][1]*100:.2f}%", 11, MUTED, "end"))
-    parts.append(txt(L + 4, T + 14, "25,879 ids (not 40,960): Swift emits fewer distinct tokens", 11, MUTED))
+    parts.append(txt(L + 4, T + 14, "Swift 1.0: 25,879 ids (not 40,960), because Swift emits fewer distinct tokens", 11, MUTED))
     parts.append("</svg>")
     open(os.path.join(OUT, "vocab-coverage.svg"), "w").write("\n".join(parts))
 
@@ -167,7 +167,7 @@ def vocab_chart_15():
 
     parts = [svg_open(W, H), card(W, H)]
     parts.append(txt(24, 34, "Swift 1.5: held-out draft-vocabulary coverage", 17, INK, weight=600))
-    parts.append(txt(24, 52, "the 1.0-derived list covers 1.5's output as well as a list rebuilt from it", 12, MUTED))
+    parts.append(txt(24, 52, "share of held-out 1.5 tokens inside each list; says nothing about token probabilities", 12, MUTED))
     for v in (0.96, 0.97, 0.98, 0.99, 1.00):
         y = Y(v)
         parts.append(line(L, y, W - R, y, GRID))

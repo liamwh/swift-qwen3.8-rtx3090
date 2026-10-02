@@ -25,5 +25,5 @@
 <circle cx="662.2" cy="78.9" r="4" fill="#2563eb"/>
 <text x="692" y="82.91499999999982" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#2563eb" text-anchor="start" font-weight="600">Swift-derived  99.81%</text>
 <text x="81.266586" y="119.15499999999986" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#6b7280" text-anchor="end" font-weight="400">99.17%</text>
-<text x="82" y="78" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#6b7280" text-anchor="start" font-weight="400">25,879 ids (not 40,960): Swift emits fewer distinct tokens</text>
+<text x="82" y="78" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#6b7280" text-anchor="start" font-weight="400">Swift 1.0: 25,879 ids (not 40,960), because Swift emits fewer distinct tokens</text>
 </svg>

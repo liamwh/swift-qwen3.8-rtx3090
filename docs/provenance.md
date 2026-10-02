@@ -69,3 +69,18 @@ Swift 1.0 int8, Qwen fast and Swift 1.5 int8 all sit behind the base Qwen
 list and log identical quote counters (18,162 accepted of 18,873 drafted in
 6,291 steps) although they are three different target models. That pins the
 quote acceptance to the list.
+
+## Checkpoint sizes
+
+Total `*.safetensors` bytes in the directories the server loads, measured
+with `du -bLc` on 2026-10-02.
+
+| directory | bytes |
+|---|---|
+| Swift 1.0 fast | 15,847,047,104 |
+| Swift 1.5 fast | 15,845,479,936 |
+| Swift 1.0 int8 | 16,839,754,368 |
+| Swift 1.5 int8 | 16,839,755,456 |
+
+The fast pair differs by 1,567,168 bytes (1.5 is smaller) and the int8
+pair by 1,088 bytes. Neither build is meaningfully heavier on disk.
