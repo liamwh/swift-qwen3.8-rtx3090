@@ -1,0 +1,48 @@
+# sha256 of tokenizer, chat-template and config files, checked 2026-10-02.
+# Sources: HF = https://huggingface.co/<repo> at the revision shown, LOCAL = the model directory the server loads.
+# upstream-1.0  ukisai/Swift-Qwen3.8-27b           6bc57e4eca31ee61d4e92a631978655a78bfa465
+# upstream-1.5  ukisai/Swift-1.5-Qwen3.8-27b       bc7a1e10b689648585a3ef41494c8d84cf77271a
+# published-1.0 liamwh/Swift-Qwen3.8-27B-W4A16-syv-fast    fa592e0bcfd79a320eaed8b37f23b2728db3401b
+# published-1.5 liamwh/Swift-1.5-Qwen3.8-27B-W4A16-syv-fast e7067d6d4818e37604a7ad754ca36c61a7e4a8e1
+0997f410c57a1f4e53b09e4be8f4a172d90edd9564368fb0847030937229b9f3  upstream-1.0/tokenizer.json
+0997f410c57a1f4e53b09e4be8f4a172d90edd9564368fb0847030937229b9f3  upstream-1.5/tokenizer.json
+06b9509352d2af50381ab2247e083b80d32d5c0aba91c272ca9ff729b6a0e523  published-1.0/tokenizer.json
+0997f410c57a1f4e53b09e4be8f4a172d90edd9564368fb0847030937229b9f3  published-1.5/tokenizer.json
+06b9509352d2af50381ab2247e083b80d32d5c0aba91c272ca9ff729b6a0e523  local-1.0/tokenizer.json
+0997f410c57a1f4e53b09e4be8f4a172d90edd9564368fb0847030937229b9f3  local-1.5/tokenizer.json
+b11349aafa7cdc6a320767cf7ceb29ed82f7eda5d65e8e0819e76f0ce947bf27  upstream-1.0/tokenizer_config.json
+b11349aafa7cdc6a320767cf7ceb29ed82f7eda5d65e8e0819e76f0ce947bf27  upstream-1.5/tokenizer_config.json
+66e427c470fe580fe8c7b5725d857af23d8417e37fae62667ec698306a19987b  published-1.0/tokenizer_config.json
+b11349aafa7cdc6a320767cf7ceb29ed82f7eda5d65e8e0819e76f0ce947bf27  published-1.5/tokenizer_config.json
+66e427c470fe580fe8c7b5725d857af23d8417e37fae62667ec698306a19987b  local-1.0/tokenizer_config.json
+b11349aafa7cdc6a320767cf7ceb29ed82f7eda5d65e8e0819e76f0ce947bf27  local-1.5/tokenizer_config.json
+c3cf9e34abf4f9e36c2d72165aa9c132d3e2a725b6c2586aaa3a8af9d7a81041  upstream-1.0/chat_template.jinja
+c3cf9e34abf4f9e36c2d72165aa9c132d3e2a725b6c2586aaa3a8af9d7a81041  upstream-1.5/chat_template.jinja
+c3cf9e34abf4f9e36c2d72165aa9c132d3e2a725b6c2586aaa3a8af9d7a81041  published-1.0/chat_template.jinja
+c3cf9e34abf4f9e36c2d72165aa9c132d3e2a725b6c2586aaa3a8af9d7a81041  published-1.5/chat_template.jinja
+400a56324adc7e478e3e9f8f7c8e3ac2ee9a8281652557112547c37ba5733f73  local-1.0/chat_template.jinja
+400a56324adc7e478e3e9f8f7c8e3ac2ee9a8281652557112547c37ba5733f73  local-1.5/chat_template.jinja
+ce99b4cb2983d118806ce0a8b777a35b093e2000a503ebde25853284c9dfa003  upstream-1.0/vocab.json
+ce99b4cb2983d118806ce0a8b777a35b093e2000a503ebde25853284c9dfa003  upstream-1.5/vocab.json
+ce99b4cb2983d118806ce0a8b777a35b093e2000a503ebde25853284c9dfa003  published-1.0/vocab.json
+ce99b4cb2983d118806ce0a8b777a35b093e2000a503ebde25853284c9dfa003  published-1.5/vocab.json
+ce99b4cb2983d118806ce0a8b777a35b093e2000a503ebde25853284c9dfa003  local-1.0/vocab.json
+ce99b4cb2983d118806ce0a8b777a35b093e2000a503ebde25853284c9dfa003  local-1.5/vocab.json
+a9d356d7bdf1ef4949e3e748e95b8e10ad9d4e2e838eddc38a0a7b6b94d1db8d  upstream-1.0/merges.txt
+a9d356d7bdf1ef4949e3e748e95b8e10ad9d4e2e838eddc38a0a7b6b94d1db8d  upstream-1.5/merges.txt
+a9d356d7bdf1ef4949e3e748e95b8e10ad9d4e2e838eddc38a0a7b6b94d1db8d  published-1.0/merges.txt
+a9d356d7bdf1ef4949e3e748e95b8e10ad9d4e2e838eddc38a0a7b6b94d1db8d  published-1.5/merges.txt
+a9d356d7bdf1ef4949e3e748e95b8e10ad9d4e2e838eddc38a0a7b6b94d1db8d  local-1.0/merges.txt
+a9d356d7bdf1ef4949e3e748e95b8e10ad9d4e2e838eddc38a0a7b6b94d1db8d  local-1.5/merges.txt
+0b65d40c797e19ad9bbd38538f1b45155b2832ffaffa7a69df96ddf57213fc9b  upstream-1.0/generation_config.json
+e70c136c1b78ddc1fb0905bac8e733a4dc448d4f852a5dd75143fffc70be550e  upstream-1.5/generation_config.json
+0b65d40c797e19ad9bbd38538f1b45155b2832ffaffa7a69df96ddf57213fc9b  published-1.0/generation_config.json
+e70c136c1b78ddc1fb0905bac8e733a4dc448d4f852a5dd75143fffc70be550e  published-1.5/generation_config.json
+0b65d40c797e19ad9bbd38538f1b45155b2832ffaffa7a69df96ddf57213fc9b  local-1.0/generation_config.json
+e70c136c1b78ddc1fb0905bac8e733a4dc448d4f852a5dd75143fffc70be550e  local-1.5/generation_config.json
+191e0af232104ed8b65258cf3fb2b842e288008baca7633c11b82a1ac7203aab  upstream-1.0/config.json
+191e0af232104ed8b65258cf3fb2b842e288008baca7633c11b82a1ac7203aab  upstream-1.5/config.json
+3c18e2ac07cfae1237983c07440770476a30c717ee9a63aa8bbda816a0090d01  published-1.0/config.json
+7957eae37a428f985582e89d4e41ce766f043e05ec61813954634083a796da81  published-1.5/config.json
+3c18e2ac07cfae1237983c07440770476a30c717ee9a63aa8bbda816a0090d01  local-1.0/config.json
+7957eae37a428f985582e89d4e41ce766f043e05ec61813954634083a796da81  local-1.5/config.json

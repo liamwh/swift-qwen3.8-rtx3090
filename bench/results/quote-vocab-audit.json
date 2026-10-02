@@ -1,0 +1,231 @@
+{
+  "target_tokens": 8000,
+  "doc_sha1_12": "419107119bc3",
+  "doc_tokens": 8151,
+  "tokenizer_sha256": "0997f410c57a1f4e53b09e4be8f4a172d90edd9564368fb0847030937229b9f3",
+  "lists": {
+    "base-Qwen": {
+      "list_ids": 40960,
+      "list_sha256": "b64b6dfcf5441eb995ddf77d3d37b018e91b88c56ad1b4c5774ad8fbfac1c388",
+      "missing_tokens": 232,
+      "missing_fraction": 0.028462765304870567,
+      "distinct_missing_ids": 8,
+      "top_missing": [
+        {
+          "id": 36760,
+          "text": " Iterable",
+          "count": 111,
+          "in_other_lists": [
+            "swift-1.0",
+            "swift-1.5"
+          ]
+        },
+        {
+          "id": 58980,
+          "text": " telemetry",
+          "count": 56,
+          "in_other_lists": [
+            "swift-1.0",
+            "swift-1.5"
+          ]
+        },
+        {
+          "id": 81347,
+          "text": " batching",
+          "count": 56,
+          "in_other_lists": [
+            "swift-1.0",
+            "swift-1.5"
+          ]
+        },
+        {
+          "id": 64975,
+          "text": " DESIGN",
+          "count": 3,
+          "in_other_lists": []
+        },
+        {
+          "id": 16252,
+          "text": " NOTE",
+          "count": 3,
+          "in_other_lists": [
+            "swift-1.0"
+          ]
+        },
+        {
+          "id": 87416,
+          "text": " flushing",
+          "count": 1,
+          "in_other_lists": [
+            "swift-1.0",
+            "swift-1.5"
+          ]
+        },
+        {
+          "id": 51883,
+          "text": " whichever",
+          "count": 1,
+          "in_other_lists": [
+            "swift-1.0",
+            "swift-1.5"
+          ]
+        },
+        {
+          "id": 79077,
+          "text": " callers",
+          "count": 1,
+          "in_other_lists": [
+            "swift-1.0",
+            "swift-1.5"
+          ]
+        }
+      ]
+    },
+    "swift-1.0": {
+      "list_ids": 25879,
+      "list_sha256": "e30af79520ade5b7ddb851d75cf271f07d407dc768bf646e4517607d562a65a6",
+      "missing_tokens": 10,
+      "missing_fraction": 0.00122684333210649,
+      "distinct_missing_ids": 3,
+      "top_missing": [
+        {
+          "id": 32011,
+          "text": "fact",
+          "count": 6,
+          "in_other_lists": [
+            "base-Qwen"
+          ]
+        },
+        {
+          "id": 64975,
+          "text": " DESIGN",
+          "count": 3,
+          "in_other_lists": []
+        },
+        {
+          "id": 20658,
+          "text": " racing",
+          "count": 1,
+          "in_other_lists": [
+            "base-Qwen",
+            "swift-1.5"
+          ]
+        }
+      ]
+    },
+    "swift-1.5": {
+      "list_ids": 25285,
+      "list_sha256": "af978365e42e76273f55062249378dce2bc44a09ba9edd4c89a01da75a0cdd0a",
+      "missing_tokens": 236,
+      "missing_fraction": 0.028953502637713163,
+      "distinct_missing_ids": 7,
+      "top_missing": [
+        {
+          "id": 9494,
+          "text": "logger",
+          "count": 56,
+          "in_other_lists": [
+            "base-Qwen",
+            "swift-1.0"
+          ]
+        },
+        {
+          "id": 13286,
+          "text": ".getLogger",
+          "count": 56,
+          "in_other_lists": [
+            "base-Qwen",
+            "swift-1.0"
+          ]
+        },
+        {
+          "id": 5340,
+          "text": "(__",
+          "count": 56,
+          "in_other_lists": [
+            "base-Qwen",
+            "swift-1.0"
+          ]
+        },
+        {
+          "id": 18562,
+          "text": "__)",
+          "count": 56,
+          "in_other_lists": [
+            "base-Qwen",
+            "swift-1.0"
+          ]
+        },
+        {
+          "id": 32011,
+          "text": "fact",
+          "count": 6,
+          "in_other_lists": [
+            "base-Qwen"
+          ]
+        },
+        {
+          "id": 64975,
+          "text": " DESIGN",
+          "count": 3,
+          "in_other_lists": []
+        },
+        {
+          "id": 16252,
+          "text": " NOTE",
+          "count": 3,
+          "in_other_lists": [
+            "swift-1.0"
+          ]
+        }
+      ]
+    }
+  },
+  "quote_counters": {
+    "fast-ladder.jsonl:A-swift-mtp-long": {
+      "accepted": 18162,
+      "drafted": 18873,
+      "steps": 6291
+    },
+    "fast-ladder.jsonl:B-swiftfast-mtp-long": {
+      "accepted": 18330,
+      "drafted": 18369,
+      "steps": 6123
+    },
+    "fast-ladder.jsonl:C-qwen-mtp-long": {
+      "accepted": 18162,
+      "drafted": 18873,
+      "steps": 6291
+    },
+    "fast-ladder.jsonl:D-swiftfast-dflash2-fast": {
+      "accepted": 21300,
+      "drafted": 22071,
+      "steps": 3153
+    },
+    "fast-ladder.jsonl:E-qwen-dflash2-fast": {
+      "accepted": 21300,
+      "drafted": 22071,
+      "steps": 3153
+    },
+    "swift15-ladder.jsonl:F-swift15-mtp-long": {
+      "accepted": 18162,
+      "drafted": 18873,
+      "steps": 6291
+    },
+    "swift15-ladder.jsonl:G-swift15fast-mtp-long": {
+      "accepted": 17988,
+      "drafted": 19395,
+      "steps": 6465
+    },
+    "swift15-ladder.jsonl:B2-swift10fast-mtp-long": {
+      "accepted": 18330,
+      "drafted": 18378,
+      "steps": 6126
+    },
+    "swift15-ladder.jsonl:I-swift15fast-dflash2-fast": {
+      "accepted": 21300,
+      "drafted": 22071,
+      "steps": 3153
+    }
+  }
+}
