@@ -86,10 +86,17 @@ Reading it:
   the same checkpoint's int8 layout (85.7 → 101.3) and +94% over no-spec
   decoding, at 1.1 GiB less VRAM than the int8 layout.
 - **Swift 1.5 is ~3% slower than Swift 1.0 at the daily profile**
-  (101.3 vs 104.4 same-night). The body is why: UkisAI's official AWQ is
-  ~1.5 GiB heavier than the third-party AWQ under the 1.0 build, and the F
-  leg shows the same cost at the int8 layout (85.7 vs 94.0 historical for
-  the 1.0 body). Acceptance is a touch lower too (0.645 vs 0.668).
+  (101.3 vs 104.4 same-night), and the gap is speculative yield, not
+  weight bytes. Steps per second match to 0.7% (34.5 vs 34.7; the quote
+  legs to 0.4%), so per-step time is equal — if the body read more bytes
+  per step, the step rate would fall with it. What fell is tokens per
+  step: 3.00 → 2.93 (acceptance 0.668 → 0.645). The MTP drafter is
+  bit-identical base-Qwen in both builds, so the target moved away from
+  it. An earlier reading blamed the ~1.5 GiB bigger official AWQ export;
+  the step-rate arithmetic rules that out (the extra bytes are the
+  separate bf16 MTP shard and layout, not per-step decode reads), and the
+  85.7-vs-94.0 int8 comparison it leaned on is cross-night, single-boot,
+  and uncontrolled.
 - The 1.0 build's 0.998 quote-workload acceptance did not carry over
   (0.927 with the 1.5 vocab, 0.962 with base-Qwen's; reproduction
   fidelity unchanged). The vocabulary rebuild measured the two output
