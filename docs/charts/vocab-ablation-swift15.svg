@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="940" height="522" viewBox="0 0 940 522" role="img">
+<rect width="940" height="522" rx="10" fill="#ffffff"/>
+<text x="24" y="34" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="17" fill="#1f2937" text-anchor="start" font-weight="600">Same target, different draft vocabulary</text>
+<text x="24" y="52" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#6b7280" text-anchor="start" font-weight="400">greedy decoding (T=0), so a target writes the same text whatever the list; bar = pooled over 2 boots, dot = one boot</text>
+<line x1="230.0" y1="64.0" x2="230.0" y2="478.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="230.0" y="496" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle" font-weight="400">0</text>
+<line x1="281.4" y1="64.0" x2="281.4" y2="478.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="281.42857142857144" y="496" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle" font-weight="400">20</text>
+<line x1="332.9" y1="64.0" x2="332.9" y2="478.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="332.8571428571429" y="496" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle" font-weight="400">40</text>
+<line x1="384.3" y1="64.0" x2="384.3" y2="478.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="384.2857142857143" y="496" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle" font-weight="400">60</text>
+<line x1="435.7" y1="64.0" x2="435.7" y2="478.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="435.7142857142857" y="496" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle" font-weight="400">80</text>
+<line x1="487.1" y1="64.0" x2="487.1" y2="478.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="487.14285714285717" y="496" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle" font-weight="400">100</text>
+<line x1="538.6" y1="64.0" x2="538.6" y2="478.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="538.5714285714286" y="496" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle" font-weight="400">120</text>
+<line x1="590.0" y1="64.0" x2="590.0" y2="478.0" stroke="#e5e7eb" stroke-width="1"/>
+<text x="590.0" y="496" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle" font-weight="400">140</text>
+<text x="410.0" y="512" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="11" fill="#6b7280" text-anchor="middle" font-weight="400">decode tok/s, pooled over each boot's 24 requests</text>
+<text x="24" y="84" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="10" fill="#6b7280" text-anchor="start" font-weight="600">SWIFT 1.5 TARGET, SAME BODY, LM_HEAD AND MTP</text>
+<text x="218" y="114.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2937" text-anchor="end" font-weight="400">1.5 list (25,285 ids)</text>
+<text x="218" y="129.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="10" fill="#6b7280" text-anchor="end" font-weight="400">2 boots</text>
+<rect x="230.0" y="97.0" width="275.7" height="26.0" rx="3" fill="#2563eb"/>
+<circle cx="506.6" cy="110.0" r="4.5" fill="#1f2937" stroke="#ffffff" stroke-width="1.5"/>
+<circle cx="504.7" cy="110.0" r="4.5" fill="#1f2937" stroke="#ffffff" stroke-width="1.5"/>
+<text x="516.5787113390895" y="115.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="14" fill="#1f2937" text-anchor="start" font-weight="600">107.2</text>
+<text x="568.5787113390895" y="104.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#6b7280" text-anchor="start" font-weight="400">acceptance 0.636, 2.909 tok/step</text>
+<text x="568.5787113390895" y="118.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#6b7280" text-anchor="start" font-weight="400">36.9 verify steps/s</text>
+<text x="568.5787113390895" y="132.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#6b7280" text-anchor="start" font-weight="400">quote workload acceptance 0.927</text>
+<text x="218" y="178.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2937" text-anchor="end" font-weight="400">1.0 list (25,879 ids)</text>
+<text x="218" y="193.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="10" fill="#6b7280" text-anchor="end" font-weight="400">2 boots</text>
+<rect x="230.0" y="161.0" width="278.6" height="26.0" rx="3" fill="#7c3aed"/>
+<circle cx="507.5" cy="174.0" r="4.5" fill="#1f2937" stroke="#ffffff" stroke-width="1.5"/>
+<circle cx="509.7" cy="174.0" r="4.5" fill="#1f2937" stroke="#ffffff" stroke-width="1.5"/>
+<text x="519.7493949494901" y="179.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="14" fill="#1f2937" text-anchor="start" font-weight="600">108.4</text>
+<text x="571.7493949494901" y="168.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#6b7280" text-anchor="start" font-weight="400">acceptance 0.644, 2.933 tok/step</text>
+<text x="571.7493949494901" y="182.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#6b7280" text-anchor="start" font-weight="400">36.9 verify steps/s</text>
+<text x="571.7493949494901" y="196.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#6b7280" text-anchor="start" font-weight="400">quote workload acceptance 0.998</text>
+<text x="218" y="242.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2937" text-anchor="end" font-weight="400">union (29,670 ids)</text>
+<text x="218" y="257.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="10" fill="#6b7280" text-anchor="end" font-weight="400">2 boots</text>
+<rect x="230.0" y="225.0" width="279.2" height="26.0" rx="3" fill="#0f766e"/>
+<circle cx="508.6" cy="238.0" r="4.5" fill="#1f2937" stroke="#ffffff" stroke-width="1.5"/>
+<circle cx="509.9" cy="238.0" r="4.5" fill="#1f2937" stroke="#ffffff" stroke-width="1.5"/>
+<text x="519.8723117223649" y="243.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="14" fill="#1f2937" text-anchor="start" font-weight="600">108.6</text>
+<text x="571.8723117223649" y="232.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#6b7280" text-anchor="start" font-weight="400">acceptance 0.646, 2.937 tok/step</text>
+<text x="571.8723117223649" y="246.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#6b7280" text-anchor="start" font-weight="400">37.0 verify steps/s</text>
+<text x="571.8723117223649" y="260.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#6b7280" text-anchor="start" font-weight="400">quote workload acceptance 0.998</text>
+<text x="24" y="288" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="10" fill="#6b7280" text-anchor="start" font-weight="600">SWIFT 1.0 TARGET, SAME BODY, LM_HEAD AND MTP</text>
+<text x="218" y="318.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2937" text-anchor="end" font-weight="400">1.0 list (25,879 ids)</text>
+<text x="218" y="333.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="10" fill="#6b7280" text-anchor="end" font-weight="400">2 boots</text>
+<rect x="230.0" y="301.0" width="275.6" height="26.0" rx="3" fill="#7c3aed"/>
+<circle cx="515.2" cy="314.0" r="4.5" fill="#1f2937" stroke="#ffffff" stroke-width="1.5"/>
+<circle cx="496.6" cy="314.0" r="4.5" fill="#1f2937" stroke="#ffffff" stroke-width="1.5"/>
+<text x="525.2149046176811" y="319.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="14" fill="#1f2937" text-anchor="start" font-weight="600">107.2</text>
+<text x="577.2149046176811" y="308.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#6b7280" text-anchor="start" font-weight="400">acceptance 0.663, 2.988 tok/step</text>
+<text x="577.2149046176811" y="322.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#6b7280" text-anchor="start" font-weight="400">35.9 verify steps/s</text>
+<text x="577.2149046176811" y="336.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#6b7280" text-anchor="start" font-weight="400">quote workload acceptance 0.997</text>
+<text x="218" y="382.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2937" text-anchor="end" font-weight="400">1.5 list (25,285 ids)</text>
+<text x="218" y="397.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="10" fill="#6b7280" text-anchor="end" font-weight="400">2 boots</text>
+<rect x="230.0" y="365.0" width="281.2" height="26.0" rx="3" fill="#2563eb"/>
+<circle cx="514.8" cy="378.0" r="4.5" fill="#1f2937" stroke="#ffffff" stroke-width="1.5"/>
+<circle cx="507.6" cy="378.0" r="4.5" fill="#1f2937" stroke="#ffffff" stroke-width="1.5"/>
+<text x="524.8150225198905" y="383.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="14" fill="#1f2937" text-anchor="start" font-weight="600">109.3</text>
+<text x="576.8150225198905" y="372.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#6b7280" text-anchor="start" font-weight="400">acceptance 0.671, 3.012 tok/step</text>
+<text x="576.8150225198905" y="386.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#6b7280" text-anchor="start" font-weight="400">36.3 verify steps/s</text>
+<text x="576.8150225198905" y="400.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#6b7280" text-anchor="start" font-weight="400">quote workload acceptance 0.927</text>
+<text x="218" y="446.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="13" fill="#1f2937" text-anchor="end" font-weight="400">union (29,670 ids)</text>
+<text x="218" y="461.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="10" fill="#6b7280" text-anchor="end" font-weight="400">2 boots</text>
+<rect x="230.0" y="429.0" width="277.5" height="26.0" rx="3" fill="#0f766e"/>
+<circle cx="504.8" cy="442.0" r="4.5" fill="#1f2937" stroke="#ffffff" stroke-width="1.5"/>
+<circle cx="510.2" cy="442.0" r="4.5" fill="#1f2937" stroke="#ffffff" stroke-width="1.5"/>
+<text x="520.199736429505" y="447.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="14" fill="#1f2937" text-anchor="start" font-weight="600">107.9</text>
+<text x="572.199736429505" y="436.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#6b7280" text-anchor="start" font-weight="400">acceptance 0.676, 3.028 tok/step</text>
+<text x="572.199736429505" y="450.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#6b7280" text-anchor="start" font-weight="400">35.6 verify steps/s</text>
+<text x="572.199736429505" y="464.0" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" font-size="12" fill="#6b7280" text-anchor="start" font-weight="400">quote workload acceptance 0.997</text>
+</svg>

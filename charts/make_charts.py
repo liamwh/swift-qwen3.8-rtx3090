@@ -14,6 +14,7 @@ the point.
 Style: opaque white card, dark text, works on GitHub light/dark and on
 veloxide.dev's light/dark themes alike.
 """
+import json
 import os
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "docs", "charts")
@@ -60,19 +61,8 @@ BENCH = [
     ("Qwen fast (upstream)",    167.4, 0.387, 3.71, GREY,      "DFlash2 · 46k context"),
 ]
 
-# swift15-ladder.jsonl (2026-10-01, REPS=4 medians, same night, same pinned
-# image; B2 re-measures the published Swift 1.0 fast build as the control).
-# q1/q3 are the interquartile range over the 24 per-request decode rates in
-# each leg's *-suite.json (6 prompts x 4 reps). Prompts differ in speed far
-# more than builds do, so the IQR is wide; compare builds prompt by prompt.
-BENCH15 = [
-    # (label, decode tok/s, acceptance, tok/step, colour, group, q1, q3)
-    ("Swift-1.5 int8 heads",        85.7, 0.631, 2.89, LIGHT_BLUE, "MTP · 114k context", 79.5, 104.9),
-    ("Swift-1.5 fast (this build)", 101.3, 0.645, 2.93, BLUE, "MTP · 114k context", 90.3, 127.9),
-    ("Swift-1.0 fast (same night)", 104.4, 0.668, 3.00, "#7c3aed", "MTP · 114k context", 94.2, 128.8),
-    ("Swift-1.5 fast, no spec",     52.3, None, 1.00, "#c084fc", "MTP · 114k context", 52.3, 52.4),
-    ("Swift-1.5 fast (this build)", 163.9, 0.399, 3.79, BLUE, "DFlash2 · 46k context", 119.7, 222.3),
-]
+# The Swift 1.5 benchmark charts further down read the committed
+# controlled-session summary instead of constants typed here.
 
 def bench_chart():
     W, H = 880, 470
@@ -261,49 +251,151 @@ def gptq_chart_15():
     parts.append("</svg>")
     open(os.path.join(OUT, "gptq-kl-swift15.svg"), "w").write("\n".join(parts))
 
-def bench_chart_15():
-    W, H = 880, 500
-    L, R = 220, 190
-    T, B = 64, 40
-    plot_w = W - L - R
-    vmax = 240.0
-    row_h = (H - T - B) / len(BENCH15)
-    bar_h = 26
+# --------------------------------------------- controlled session charts ----
+# These read bench/results/controlled-summary.json, which bench/
+# controlled_analysis.sh regenerates from the committed raw legs. Nothing in
+# the numbers below is typed by hand.
+SUMMARY = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "bench", "results", "controlled-summary.json")
+PURPLE = "#7c3aed"
+LIGHT_PURPLE = "#c4b5fd"
+
+def load_summary():
+    return json.load(open(SUMMARY))
+
+def dot_bar_chart(fname, title, subtitle, rows, summary, vmax, height_per_row=64, cols=None, group_labels=None):
+    """Horizontal bars of pooled decode rate, one dot per boot.
+
+    rows: (label, summary group, colour, section)
+    cols: callable(group_dict) -> list of annotation strings drawn right of the value.
+    """
+    W = 940
+    L, R = 230, 20
+    T, B = 70, 44
+    H = T + B + height_per_row * len(rows) + 12 * len({r[3] for r in rows})
+    plot_w = W - L - R - 330
     parts = [svg_open(W, H), card(W, H)]
-    parts.append(txt(24, 34, "Swift 1.5: decode throughput and acceptance", 17, INK, weight=600))
-    parts.append(txt(24, 52, "RTX 3090, four repetitions, medians, one night. Whiskers: interquartile range over 24 requests.", 12, MUTED))
-    for gv in (0.0, 60.0, 120.0, 180.0, 240.0):
+    parts.append(txt(24, 34, title, 17, INK, weight=600))
+    parts.append(txt(24, 52, subtitle, 12, MUTED))
+    step = 20 if vmax <= 140 else 40
+    gv = 0
+    while gv <= vmax:
         x = L + plot_w * gv / vmax
         parts.append(line(x, T - 6, x, H - B, GRID))
         parts.append(txt(x, H - B + 18, f"{gv:.0f}", 11, MUTED, "middle"))
-    parts.append(txt(L + plot_w / 2, H - 10, "decode tok/s", 11, MUTED, "middle"))
-    group_y = None
-    for i, (label, dec, acc, tps, col, group, q1, q3) in enumerate(BENCH15):
-        y = T + i * row_h + (row_h - bar_h) / 2
-        if group != group_y and group_y is not None:
-            gy = T + i * row_h
-            parts.append(line(L - 12, gy, W - 16, gy, GRID))
-        group_y = group
-        parts.append(txt(L - 12, y + bar_h / 2 + 4, label, 13, INK, "end"))
-        bw = plot_w * dec / vmax
-        parts.append(rect(L, y, bw, bar_h, col))
-        wy = y + bar_h + 9
-        x1, x3 = L + plot_w * q1 / vmax, L + plot_w * q3 / vmax
-        parts.append(line(x1, wy, x3, wy, INK, 1.5))
-        parts.append(line(x1, wy - 4, x1, wy + 4, INK, 1.5))
-        parts.append(line(x3, wy - 4, x3, wy + 4, INK, 1.5))
-        parts.append(txt(L + bw + 8, y + bar_h / 2 + 0.5, f"{dec:.1f}", 13, INK, "start", 600))
-        acc_s = f"acc {acc:.3f}" if acc is not None else "no spec"
-        parts.append(txt(L + bw + 46, y + bar_h / 2 + 0.5, acc_s, 12, MUTED))
-        parts.append(txt(L + bw + 112, y + bar_h / 2 + 0.5, f"{tps:.2f} tok/step", 12, MUTED))
-    parts.append(txt(W - 16, T - 14, BENCH15[0][5].upper(), 10, MUTED, "end", 600))
-    parts.append(txt(W - 16, T + 4 * row_h - 14, BENCH15[4][5].upper(), 10, MUTED, "end", 600))
+        gv += step
+    parts.append(txt(L + plot_w / 2, H - 10, "decode tok/s, pooled over each boot's 24 requests", 11, MUTED, "middle"))
+    y = T
+    section = None
+    for label, name, col, sec in rows:
+        if sec != section:
+            section = sec
+            y += 12
+            parts.append(txt(24, y + 2, sec.upper(), 10, MUTED, weight=600))
+        g = summary["groups"][name]
+        pooled = g["pooled_decode_tps"]
+        legs = [v["pooled_decode_tps"] for v in g["per_leg"].values()]
+        cy = y + height_per_row / 2 - 4
+        parts.append(txt(L - 12, cy + 4, label, 13, INK, "end"))
+        parts.append(txt(L - 12, cy + 19, f"{len(legs)} boots", 10, MUTED, "end"))
+        bw = plot_w * pooled / vmax
+        parts.append(rect(L, cy - 13, bw, 26, col))
+        for v in legs:
+            x = L + plot_w * v / vmax
+            parts.append(f'<circle cx="{x:.1f}" cy="{cy:.1f}" r="4.5" fill="{INK}" stroke="#ffffff" stroke-width="1.5"/>')
+        right = L + plot_w * max([pooled] + legs) / vmax + 10
+        parts.append(txt(right, cy + 5, f"{pooled:.1f}", 14, INK, weight=600))
+        for j, s in enumerate(cols(g, name) if cols else []):
+            parts.append(txt(right + 52 + 0, cy - 6 + 14 * j, s, 12, MUTED))
+        y += height_per_row
     parts.append("</svg>")
-    open(os.path.join(OUT, "bench-ladder-swift15.svg"), "w").write("\n".join(parts))
+    open(os.path.join(OUT, fname), "w").write("\n".join(parts))
+
+def spec_cols(g, name=None):
+    s = g.get("speculation")
+    if not s:
+        return [f"no speculation", f"{g['steps_per_s']:.1f} steps/s"]
+    return [f"acceptance {s['acceptance']:.3f}, {s['tokens_per_step']:.3f} tok/step", f"{s['steps_per_s']:.1f} verify steps/s"]
+
+def quote_cols(g, name=None):
+    out = spec_cols(g, name)
+    # the quote workload is recorded on the T=0.7 legs; the T=0 twin shares the boots
+    twin = load_summary()["groups"].get((name or "").removesuffix("_t0"), g)
+    qs = [v["quote"] for v in twin["per_leg"].values() if v.get("quote")]
+    if qs:
+        acc = sum(q["accepted"] for q in qs) / sum(q["drafted"] for q in qs)
+        out.append(f"quote workload acceptance {acc:.3f}")
+    return out
+
+def bench_chart_15():
+    s = load_summary()
+    rows = [
+        ("Swift 1.0 fast", "t10", PURPLE, "speculative decoding on (MTP, 114k context)"),
+        ("Swift 1.5 fast", "t15", BLUE, "speculative decoding on (MTP, 114k context)"),
+        ("Swift 1.5 int8 heads", "i15", LIGHT_BLUE, "speculative decoding on (MTP, 114k context)"),
+        ("Swift 1.0 fast", "off10", LIGHT_PURPLE, "speculative decoding off"),
+        ("Swift 1.5 fast", "off15", "#93c5fd", "speculative decoding off"),
+    ]
+    dot_bar_chart("bench-ladder-swift15.svg", "Swift 1.0 vs 1.5 on one RTX 3090, interleaved boots",
+                  "bar = pooled over all boots of that build, dot = one boot; T=0.7, 6 prompts x 4 repetitions per boot",
+                  rows, s, 140.0, cols=spec_cols)
+
+def vocab_ablation_chart():
+    s = load_summary()
+    if "l15_t0" not in s["groups"]:
+        return
+    rows = [
+        ("1.5 list (25,285 ids)", "l15_t0", BLUE, "Swift 1.5 target, same body, lm_head and MTP"),
+        ("1.0 list (25,879 ids)", "l10_t0", PURPLE, "Swift 1.5 target, same body, lm_head and MTP"),
+        ("union (29,670 ids)", "lu_t0", "#0f766e", "Swift 1.5 target, same body, lm_head and MTP"),
+    ]
+    if "m10_t0" in s["groups"]:
+        rows += [
+            ("1.0 list (25,879 ids)", "m10_t0", PURPLE, "Swift 1.0 target, same body, lm_head and MTP"),
+            ("1.5 list (25,285 ids)", "m15_t0", BLUE, "Swift 1.0 target, same body, lm_head and MTP"),
+            ("union (29,670 ids)", "mu_t0", "#0f766e", "Swift 1.0 target, same body, lm_head and MTP"),
+        ]
+    dot_bar_chart("vocab-ablation-swift15.svg", "Same target, different draft vocabulary",
+                  "greedy decoding (T=0), so a target writes the same text whatever the list; bar = pooled over 2 boots, dot = one boot",
+                  rows, s, 140.0, cols=quote_cols)
+
+def paired_chart():
+    s = load_summary()
+    comps = [("T=0.7", s["comparisons"]["t15:t10"], BLUE), ("T=0", s["comparisons"]["t15_t0:t10_t0"], PURPLE)]
+    W, H = 880, 420
+    L, R = 190, 40
+    T, B = 100, 56
+    pw = W - L - R
+    lo, hi = -20.0, 10.0
+    X = lambda v: L + pw * (v - lo) / (hi - lo)
+    parts = [svg_open(W, H), card(W, H)]
+    parts.append(txt(24, 34, "Swift 1.5 against Swift 1.0, prompt by prompt", 17, INK, weight=600))
+    parts.append(txt(24, 52, "difference in mean decode rate per prompt, speculation on; each prompt is 8 boots x 4 repetitions in the paired blocks", 12, MUTED))
+    for v in range(-20, 11, 5):
+        parts.append(line(X(v), T - 8, X(v), H - B, GRID if v else GREY, 1 if v else 2))
+        parts.append(txt(X(v), H - B + 18, f"{v:+d}%" if v else "0", 11, MUTED, "middle"))
+    ids = list(comps[0][1]["per_prompt_ratio_minus_1"])
+    row_h = (H - T - B) / len(ids)
+    for i, pid in enumerate(ids):
+        cy = T + i * row_h + row_h / 2
+        parts.append(txt(L - 12, cy + 4, pid.replace("_", " "), 13, INK, "end"))
+        for k, (tag, c, col) in enumerate(comps):
+            v = c["per_prompt_ratio_minus_1"][pid] * 100
+            parts.append(f'<circle cx="{X(v):.1f}" cy="{cy + (k - 0.5) * 12:.1f}" r="5" fill="{col}"/>')
+    ymean = H - B + 36
+    for k, (tag, c, col) in enumerate(comps):
+        m = c["mean_ratio_minus_1"] * 100
+        lo_ci, hi_ci = [v * 100 for v in c["ci95_resampling_prompts_too"]]
+        yy = T - 22 + k * 0
+        parts.append(txt(W - R, 52 + 16 * (k + 1), f"{tag}: mean {m:+.1f}%, 95% interval {lo_ci:+.1f} to {hi_ci:+.1f}%", 12, col, "end", 600))
+    parts.append(txt(L + pw / 2, H - 10, "Swift 1.5 vs Swift 1.0 (negative = 1.5 slower)", 11, MUTED, "middle"))
+    parts.append("</svg>")
+    open(os.path.join(OUT, "paired-swift15.svg"), "w").write("\n".join(parts))
 
 
 if __name__ == "__main__":
     bench_chart(); vocab_chart(); gptq_chart()
-    bench_chart_15(); vocab_chart_15(); gptq_chart_15()
+    vocab_chart_15(); gptq_chart_15()
+    if os.path.exists(SUMMARY):
+        bench_chart_15(); vocab_ablation_chart(); paired_chart()
     for f in sorted(os.listdir(OUT)):
         print(os.path.join(OUT, f), os.path.getsize(os.path.join(OUT, f)), "bytes")
